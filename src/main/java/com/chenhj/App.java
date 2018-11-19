@@ -19,8 +19,7 @@ import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 
 /**
- * Hello world!
- *
+ *ES数据导出入口类
  */
 public class App 
 {
@@ -42,7 +41,7 @@ public class App
     	
     }
     /**
-     * 增量数据处理
+     * 导出数据线程,后期根据index的shard的数量进行多线程获取
   * @throws Exception 
      */
     private static void exportDataTask() throws Exception{

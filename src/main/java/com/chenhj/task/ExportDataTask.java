@@ -29,7 +29,7 @@ import com.chenhj.util.HttpClientUtils;
 * Copyright: Copyright (c) 2018 Montnets
 * 
 * @ClassName: IncrementDataTask.java
-* @Description: 增量数据任务处理
+* @Description: ES数据导出任务线程实现类
 *
 * @version: v1.0.0
 * @author: chenhj

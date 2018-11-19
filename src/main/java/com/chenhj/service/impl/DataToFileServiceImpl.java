@@ -89,6 +89,7 @@ public class DataToFileServiceImpl implements IDataToFileService{
 				filePath = basePath +File.separator+fileName;
 			}
 			/*********************************************/
+			//获取数据字符串集合
 			String str =getJsonStr(list);
 			FileUtil.writeFile(filePath,str);
 			//该批数据写完,将标记写入日志中\
@@ -100,7 +101,12 @@ public class DataToFileServiceImpl implements IDataToFileService{
 			throw e;
 		}
 	}
-	// 获取要写入的文件下标
+	/**
+	 * 获取要写入的文件下标
+	 * @param size 数据长度
+	 * @param num 单个文件最大长度
+	 * @return
+	 */
 	public int sedAndGetIndex(int size,int num) {
 		
 		if (jsonIndex.size() == 0) {
@@ -179,6 +185,11 @@ public class DataToFileServiceImpl implements IDataToFileService{
 
 		return StringUtils.join(list,fieldSplit);
 	}
+	/**
+	 * 特殊需求,有的需要替换key
+	 * @param oldkey
+	 * @return
+	 */
 	public String replaceKey(String oldkey){
 		String keySet[] = customFieldName.split(",");
 		for(String key:keySet){
