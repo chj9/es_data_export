@@ -10,6 +10,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**   
 * Copyright: Copyright (c) 2018 Montnets
@@ -115,4 +117,17 @@ public class FileUtil {
 				}
 			}
 	    }
+	/**
+	 * 查找不同的数据
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		List<String> list1 = new ArrayList<>();
+		List<String> list2= new ArrayList<>();
+		for(String phone1:list1){
+			if(!list2.contains(phone1)){
+				System.out.println(111);
+			}
+		}
+	}
 }

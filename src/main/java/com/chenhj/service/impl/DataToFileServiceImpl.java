@@ -80,10 +80,10 @@ public class DataToFileServiceImpl implements IDataToFileService{
 						jsonIndex.put(0, dataSize);
 					}
 					firstRun = false;
-					filePath = basePath +File.separator+fileName+"_"+index;
 				}else if(!firstRun){
 					index = sedAndGetIndex(dataSize,num);
 				}
+				filePath = basePath +File.separator+fileName+"_"+index;
 				flagStr = index+","+jsonIndex.get(index);
 			}else{
 				filePath = basePath +File.separator+fileName;

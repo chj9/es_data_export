@@ -4,6 +4,8 @@ package com.chenhj.util;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -381,33 +383,27 @@ public class HttpClientUtils {
 			httpClient.close();
 		}
 	}
-	public static boolean checkUrlIsValid(String url) {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(10000).setConnectTimeout(5000)
-                .build();      
-        HttpGet httpGet = new HttpGet(url);
-        httpGet.setConfig(requestConfig);
-        CloseableHttpResponse response = null;
-         
-        boolean isValid = false;
-         
+	/**
+	 * 测试连接是否可用
+	 * @param host
+	 * @param port
+	 * @return
+	 */
+	public static boolean isHostConnectable(String host, int port) {
+        Socket socket = null;
         try {
-            response = httpClient.execute(httpGet);
-            int statusCode = response.getStatusLine().getStatusCode();
-            if(statusCode == 200) {
-                isValid = true;
-            }
-        } catch (Exception e) {
-             
+        	socket = new Socket();
+            socket.connect(new InetSocketAddress(host, port));
+        } catch (IOException e) {
+            return false;
         } finally {
-            if(response != null) {
-                try {
-                    response.close();
-                } catch (IOException e) {
-                     
-                }
-            }
+        	if(socket!=null){
+        		try {
+					socket.close();
+				} catch (IOException e) {
+				}
+        	}
         }
-        return isValid;
+        return true;
     }
 }

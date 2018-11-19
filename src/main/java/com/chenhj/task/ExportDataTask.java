@@ -44,7 +44,7 @@ public class ExportDataTask implements Runnable{
 	private static final Logger logger = LoggerFactory.getLogger(ExportDataTask.class);
 	/****数据库连接*****/
 	//HTTP连接状态
-	private volatile boolean conneFlag = true;
+	private volatile boolean conneFlag = false;
 	//重连接次数,达到一定次数开始休眠
 	private int reconnect = 0;
 	//请求头部
@@ -65,8 +65,9 @@ public class ExportDataTask implements Runnable{
 		HttpClientResult result = null;
 		String index = conf.get("index");
 		String type = conf.get("type");
-		String url1 =String.format("http://%s/%s/%s/_search?scroll=1m", conf.get("es.servers"),index,type);
-		String url2 =String.format("http://%s/_search/scroll", conf.get("es.servers"));
+		String esUrl = conf.get("es.servers");
+		String url1 =String.format("http://%s/%s/%s/_search?scroll=1m",esUrl,index,type);
+		String url2 =String.format("http://%s/_search/scroll",esUrl);
 		String query = conf.get("query");
 		String includes = conf.get("includes");
 		JSONObject params = new JSONObject();
@@ -122,6 +123,19 @@ public class ExportDataTask implements Runnable{
 						 logger.error("服务端响应异常,状态码:{},内容:{}",result.getCode(),result.getContent());
 						 TimeUnit.SECONDS.sleep(120);
 					}
+			   }else{
+				   //测试连接是否正常
+				   String urls[] = esUrl.split(":");
+				   String ip = urls[0];
+				   if(urls.length==2){
+					   Integer port = Integer.valueOf(urls[1]);
+					   conneFlag =  HttpClientUtils.isHostConnectable(ip, port);
+				   }else{
+					   conneFlag =  HttpClientUtils.isHostConnectable(ip, 80);
+				   }
+				   logger.info("测试ES连接,连接状态:"+conneFlag);
+				   //休眠三秒
+				   TimeUnit.SECONDS.sleep(3);
 			   }
 			//该异常一般都是对方的url无法访问了,这个时候静默一段时间 
 			}catch (SocketTimeoutException e) {
