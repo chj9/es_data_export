@@ -135,7 +135,7 @@ public class ExportDataTask implements Runnable{
 				   }
 				   logger.info("测试ES连接,连接状态:"+conneFlag);
 				   //休眠三秒
-				   TimeUnit.SECONDS.sleep(3);
+				   TimeUnit.SECONDS.sleep(1);
 			   }
 			//该异常一般都是对方的url无法访问了,这个时候静默一段时间 
 			}catch (SocketTimeoutException e) {

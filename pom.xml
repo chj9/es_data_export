@@ -17,6 +17,8 @@
   		<logback>1.2.3</logback>
 		<slf4j>1.7.25</slf4j>
     	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    	<maven.compiler.source>1.8</maven.compiler.source>
+	  	<maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -89,7 +91,7 @@
                     </descriptorRefs>  
                     <archive>  
                         <manifest>  
-                            <mainClass>com.montnets.App</mainClass>  
+                            <mainClass>com.chenhj.App</mainClass>  
                         </manifest>  
                     </archive>  
                 </configuration>  
