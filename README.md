@@ -6,13 +6,16 @@
 # Version
 
 ##V1.2.1
+
 &nbsp;&nbsp;1、优化写文件操作,使用队列。
 
 ##V1.2.2
+
 &nbsp;&nbsp;1、重构代码,取消自己写的HTTP请求，使用官方RestClient工具。
 &nbsp;&nbsp;2、支持多线程拉取数据。
 
 ##V1.0.1
+
 &nbsp;&nbsp;1、实现单线程导出数据。
 
 # Supported
