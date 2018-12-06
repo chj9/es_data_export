@@ -2,17 +2,22 @@ package com.chenhj;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSONObject;
+import com.chenhj.constant.ApplicationConfig;
 import com.chenhj.constant.Constant;
+import com.chenhj.init.Rest;
+import com.chenhj.job.EsInfoJob;
+import com.chenhj.job.ScrollMultJob;
 import com.chenhj.task.ExportDataTask;
-import com.chenhj.util.PropertiesUtil;
-
+import com.chenhj.util.PropertiesAutoSerialize;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
@@ -25,34 +30,46 @@ public class App
 {
 	
 	private static final Logger logger = LoggerFactory.getLogger(App.class);
-	 private static Map<String, String> conf = null;
     public static void main( String[] args )  {
     	try {
     		initLogBack();
         	logger.info("日志加载成功...");	
         	//读取配置文件
-    		conf =new PropertiesUtil().loadProperties(Constant.CONFIG_NAME);
-    		Constant.GLOBAL_CONFIG = conf;
+    		PropertiesAutoSerialize.init(Constant.CONFIG_NAME,ApplicationConfig.class);
+    		initEs();
         	exportDataTask();
         	logger.info("程序启动成功,版本号:"+Constant.VERSION);
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("程序启动失败");
+			System.exit(-1);
 		}
     	
     }
     /**
      * 导出数据线程,后期根据index的shard的数量进行多线程获取
-  * @throws Exception 
+     * @throws Exception 
      */
     private static void exportDataTask() throws Exception{
  	       ExecutorService exec = null;
+ 	      
  		 try {
- 	       exec = Executors.newFixedThreadPool(1);   
-    	   	//执行任务,目前单线程执行
- 		   for(int i=0;i<1;i++){
- 			   ExportDataTask task = new ExportDataTask();
+ 		   int threadSize = getThreadSize();
+ 	       exec = Executors.newFixedThreadPool(threadSize);  
+ 	       //写文件的线程,单线程操作
+ 	       logger.info("拉取数据线程数:"+threadSize);
+ 	       String scrollId;
+    	   //执行任务
+ 		   for(int i=0;i<threadSize;i++){
+ 			   ScrollMultJob sJob = new ScrollMultJob();
+ 			  List<JSONObject> list = sJob.executeJob(ApplicationConfig.getScrollQuery(i,threadSize));
+ 			   scrollId = sJob.getSrcollId();
+ 			   System.out.println(scrollId);
+ 			   ExportDataTask task = new ExportDataTask(scrollId,list);
  			   exec.execute(task);
  		   }
+ 		 // exec.shutdown();
+ 		 // exec.awaitTermination(1,TimeUnit.HOURS);
  		} catch (Exception e) {
  			//关闭线程池
  			if(exec!=null){
@@ -60,6 +77,37 @@ public class App
  			}
  			throw e;
  		}
+    }
+    private static int getThreadSize() throws Exception{
+    	   EsInfoJob esInfo = new EsInfoJob();
+    	   //索引分片数
+    	   int share = esInfo.getIndexShards(ApplicationConfig.getIndex());//优先级2
+		   //配置最大线程
+    	   int threadSize = ApplicationConfig.getThreadSize(); //优先级1
+		   //当前机器CPU数
+    	   int nowCpu = Runtime.getRuntime().availableProcessors(); //优先级3
+	    	//如果分区数小于最大线程数,则线程数取分区的数量
+	       if(share<threadSize){
+	    	    threadSize = share;
+	    	}
+	       if(nowCpu<threadSize){
+	    	   threadSize = nowCpu;
+	       }
+	     return threadSize;
+    }
+    /**
+     * 初始化ES的连接
+     */
+    public static  void initEs(){
+    	String ips = ApplicationConfig.getEsserver();
+    	String username = ApplicationConfig.getEsusername();
+    	String password = ApplicationConfig.getEspassword();
+    	//ES初始化
+    	Rest rest = Rest.Client.setHttpHosts(ips.split(","));
+		if(StringUtils.isNotBlank(username)&&StringUtils.isNotBlank(password)){
+			rest.validation(username, password);
+		}
+		rest.build();
     }
     /**
      * 加载日志配置文件(不放在resources下的时候使用)

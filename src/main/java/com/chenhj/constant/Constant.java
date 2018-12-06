@@ -1,6 +1,6 @@
 package com.chenhj.constant;
 
-import java.util.Map;
+import com.chenhj.thread.ThreadPoolManager;
 
 /**
  * 
@@ -27,7 +27,14 @@ public enum Constant {
 	public static final String LOGBACK_CONFIG_NAME = "logback.xml";
 	public static final String JSON = "json";
 	public static final String TXT = "txt";
-	public static Map<String,String> GLOBAL_CONFIG = null;
+	
+	public static final String GET ="GET";
+	public static final String POST ="POST";
+	public static final String ENCODE_UTF8="UTF-8";
+	/**
+	 * 写文件的线程
+	 */
+	public static ThreadPoolManager WRITE_FILE_THREAD = ThreadPoolManager.newInstance(1).build();
 	 /**
      * 逗号分隔符
      */

@@ -12,7 +12,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+
 import com.alibaba.fastjson.JSONObject;
+import com.chenhj.constant.ApplicationConfig;
 import com.chenhj.constant.Constant;
 import com.chenhj.service.IDataToFileService;
 import com.chenhj.util.FileUtil;
@@ -37,17 +39,16 @@ public class DataToFileServiceImpl implements IDataToFileService{
 	Map<Integer, Integer> jsonIndex = new HashMap<Integer, Integer>();
 	private  static boolean  firstRun = true;
 	int index = 0; // 起始文件下标
-	String  basePath = Constant.GLOBAL_CONFIG.get("filePath");
-	String  fileName = Constant.GLOBAL_CONFIG.get("fileName");
-	String  fileSize = Constant.GLOBAL_CONFIG.get("fileSize");
-	boolean isLineFeed = Boolean.valueOf( Constant.GLOBAL_CONFIG.get("isLineFeed"));
-	String  fieldSplit= Constant.GLOBAL_CONFIG.get("fieldSplit");
-	String  fieldSort = Constant.GLOBAL_CONFIG.get("fieldSort");
-	boolean needFieldName  =Boolean.valueOf( Constant.GLOBAL_CONFIG.get("needFieldName"));
-	String  customFieldName= Constant.GLOBAL_CONFIG.get("customFieldName");
-	String  dataLayout= Constant.GLOBAL_CONFIG.get("dataLayout");
+	String  basePath = ApplicationConfig.getFilePath();
+	String  fileName = ApplicationConfig.getFileName();
+	String  fileSize = ApplicationConfig.getFileSize();
+	boolean isLineFeed = ApplicationConfig.isLineFeed();
+	String  fieldSplit= ApplicationConfig.getFieldSplit();
+	String  fieldSort = ApplicationConfig.getFieldSort();
+	boolean needFieldName  =ApplicationConfig.isNeedFieldName();
+	String  customFieldName= ApplicationConfig.getCustomFieldName();
+	String  dataLayout= ApplicationConfig.getDataLayout();
 	String flagFileName = "flag_montnets";
-	
 	@Override
 	public void write2File(List<JSONObject> list) throws Exception {
 		try {
@@ -92,7 +93,7 @@ public class DataToFileServiceImpl implements IDataToFileService{
 			//获取数据字符串集合
 			String str =getJsonStr(list);
 			FileUtil.writeFile(filePath,str);
-			//该批数据写完,将标记写入日志中\
+			//该批数据写完,将标记写入日志中,该方法用于多文件切割时候用到
 			if(StringUtils.isNoneEmpty(flagStr)){
 				FileUtil.clearInfoForFile(flagFilePath);
 				FileUtil.writeFile(flagFilePath,flagStr);

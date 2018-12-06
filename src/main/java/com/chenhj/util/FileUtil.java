@@ -11,7 +11,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 
 /**   
 * Copyright: Copyright (c) 2018 Montnets
@@ -118,16 +121,59 @@ public class FileUtil {
 			}
 	    }
 	/**
-	 * 查找不同的数据
-	 * @param args
+	 * 一行一行装入List
+	 * @param filePath
+	 * @return
+	 * @throws Exception
 	 */
-	public static void main(String[] args) {
-		List<String> list1 = new ArrayList<>();
-		List<String> list2= new ArrayList<>();
-		for(String phone1:list1){
-			if(!list2.contains(phone1)){
-				System.out.println(111);
+	public static List<String> fileReadToList(String filePath) throws Exception {
+		 BufferedReader bReader =  null;
+		 List<String> list = null;
+		try {
+			
+		File file = new File(filePath);//定义一个file对象，用来初始化FileReader
+       FileReader reader = new FileReader(file);//定义一个fileReader对象，用来初始化BufferedReader
+       bReader = new BufferedReader(reader);//new一个BufferedReader对象，将文件内容读取到缓存
+       String s = "";
+       list = new ArrayList<>();
+       while ((s =bReader.readLine()) != null) {//逐行读取文件内容，不读取换行符和末尾的空格
+          if(StringUtils.isNoneEmpty(s)){
+        	  list.add(s);
+          }
+       }
+       return list;
+		} catch (Exception e) {
+			throw e;
+		}finally{
+			if(bReader!=null){
+				 bReader.close();
 			}
 		}
+   }
+	/**
+	 * 查找不同的数据
+	 * @param args
+	 * @throws Exception 
+	 */
+	public static void main(String[] args) throws Exception {
+		//1241923
+		List<String> sql = fileReadToList("F:\\test/mysql.txt");
+		//1241947
+		List<String> es= fileReadToList("F:\\test/es.txt");
+		
+		Set<String> sqlSet = new HashSet<>(sql);
+		Set<String> esSet = new HashSet<>(es);
+		
+		System.out.println(sqlSet.size());
+		System.out.println(esSet.size());
+		for(String phone1:sqlSet){
+			if(!esSet.contains(phone1.trim())){
+				System.out.println(phone1);
+				//String phoneTemp = "+"+phone1;
+				//String sha1Hex = DigestUtils.sha1Hex(phoneTemp.getBytes("UTF-8"));
+				//System.out.println(sha1Hex);
+			}
+		}
+		System.out.println("程序执行完..");
 	}
 }
