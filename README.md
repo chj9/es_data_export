@@ -7,16 +7,16 @@
 
 ##V1.2.1
 
-&nbsp;&nbsp;1、优化写文件操作,使用队列。
+&nbsp;&nbsp;1.优化写文件操作,使用队列。
 
 ##V1.2.2
 
-&nbsp;&nbsp;1、重构代码,取消自己写的HTTP请求，使用官方RestClient工具。
-&nbsp;&nbsp;2、支持多线程拉取数据。
+&nbsp;&nbsp;1.重构代码,取消自己写的HTTP请求，使用官方RestClient工具。
+&nbsp;&nbsp;2.支持多线程拉取数据。
 
 ##V1.0.1
 
-&nbsp;&nbsp;1、实现单线程导出数据。
+&nbsp;&nbsp;1.实现单线程导出数据。
 
 # Supported
 | Elasticsearch version        | support   |
@@ -38,11 +38,11 @@ $./run.sh
 切记修改global.properties文件
 
 # Development
-## 1、运行环境
+## 1.运行环境
 - IDE：IntelliJ IDEA
 - 项目构建工具：Maven
 
-## 2、初始化项目
+## 2.初始化项目
 - 打开IntelliJ IDEA，将项目导入
 - 修改global.properties文件配置
 - 运行App.java执行
