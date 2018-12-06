@@ -138,7 +138,7 @@ public class FileUtil {
        list = new ArrayList<>();
        while ((s =bReader.readLine()) != null) {//逐行读取文件内容，不读取换行符和末尾的空格
           if(StringUtils.isNoneEmpty(s)){
-        	  list.add(s);
+        	  list.add(s.trim());
           }
        }
        return list;
@@ -157,23 +157,28 @@ public class FileUtil {
 	 */
 	public static void main(String[] args) throws Exception {
 		//1241923
-		List<String> sql = fileReadToList("F:\\test/mysql.txt");
+		List<String> sql = fileReadToList("F:\\pb_sa_phone/pb_sa_phone");
 		//1241947
-		List<String> es= fileReadToList("F:\\test/es.txt");
+	//	List<String> es= fileReadToList("F:\\test/es.txt");
 		
-		Set<String> sqlSet = new HashSet<>(sql);
-		Set<String> esSet = new HashSet<>(es);
-		
+		Set<String> sqlSet = new HashSet<>();
+		for (String str : sql) {
+	        sqlSet.add(str.trim());
+	        
+	    }
 		System.out.println(sqlSet.size());
-		System.out.println(esSet.size());
-		for(String phone1:sqlSet){
-			if(!esSet.contains(phone1.trim())){
-				System.out.println(phone1);
-				//String phoneTemp = "+"+phone1;
-				//String sha1Hex = DigestUtils.sha1Hex(phoneTemp.getBytes("UTF-8"));
-				//System.out.println(sha1Hex);
-			}
-		}
+//		Set<String> esSet = new HashSet<>(es);
+//		
+//		System.out.println(sqlSet.size());
+//		System.out.println(esSet.size());
+//		for(String phone1:sqlSet){
+//			if(!esSet.contains(phone1.trim())){
+//				System.out.println(phone1);
+//				//String phoneTemp = "+"+phone1;
+//				//String sha1Hex = DigestUtils.sha1Hex(phoneTemp.getBytes("UTF-8"));
+//				//System.out.println(sha1Hex);
+//			}
+//		}
 		System.out.println("程序执行完..");
 	}
 }

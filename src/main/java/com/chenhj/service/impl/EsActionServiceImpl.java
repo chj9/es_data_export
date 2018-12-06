@@ -3,6 +3,7 @@
  */
 package com.chenhj.service.impl;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +75,7 @@ public class EsActionServiceImpl implements IEsActionService{
 			}else{
 				request = new Request(Constant.GET, endPoint1);
 				request.setJsonEntity(query);
+				logger.debug("Query:"+query);
 			}
 		    //ES 6.4版本之前的实现
 		    //Response  response =client.performRequest(Constant.GET,endPoint,Collections.<String, String> emptyMap(),entity);
@@ -121,6 +123,14 @@ public class EsActionServiceImpl implements IEsActionService{
 	@Override
 	public String getSrcollId() {
 		return srcollId;
+	}
+	@Override
+	public void clearSrcoll(String srcollId) throws IOException {
+		if(StringUtils.isNotBlank(srcollId)){
+			String endPoint = "/_search/scroll/"+srcollId.trim();
+			Request request = new Request(Constant.DELETE, endPoint);
+			client.performRequest(request);
+		}
 	}
 
 }

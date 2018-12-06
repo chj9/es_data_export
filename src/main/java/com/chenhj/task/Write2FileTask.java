@@ -43,5 +43,8 @@ public class Write2FileTask implements Runnable {
 			logger.error("文件写失败",e);
 		}
 	}
+	public static void main(String[] args) {
+		System.out.println(224735+224308+449403+450308+450725);
+	}
      
 }

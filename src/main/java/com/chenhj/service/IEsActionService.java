@@ -3,6 +3,7 @@
  */
 package com.chenhj.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
@@ -25,4 +26,5 @@ import com.alibaba.fastjson.JSONObject;
 public interface IEsActionService {
 		public List<JSONObject> executeQuery(String srcollId,String query) throws Exception ;
 		public String getSrcollId();
+		public void clearSrcoll(String srcollId) throws IOException ;
 }

@@ -123,6 +123,10 @@ public class ApplicationConfig {
 			inc.put("includes", field);
 			params.put("_source",inc);
 		}
+		if(StringUtils.isBlank(params.getString("sort"))){
+			String sort[] ={"_doc"};
+			params.put("sort", sort);
+		}
 		return params.toJSONString();
 	}
 }

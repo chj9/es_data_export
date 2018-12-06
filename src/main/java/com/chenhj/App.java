@@ -3,8 +3,10 @@ package com.chenhj;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -30,6 +32,7 @@ public class App
 {
 	
 	private static final Logger logger = LoggerFactory.getLogger(App.class);
+
     public static void main( String[] args )  {
     	try {
     		initLogBack();
@@ -56,6 +59,7 @@ public class App
  		 try {
  		   int threadSize = getThreadSize();
  	       exec = Executors.newFixedThreadPool(threadSize);  
+ 	       Constant.LATCH = new CountDownLatch(threadSize);
  	       //写文件的线程,单线程操作
  	       logger.info("拉取数据线程数:"+threadSize);
  	       String scrollId;
@@ -64,12 +68,28 @@ public class App
  			   ScrollMultJob sJob = new ScrollMultJob();
  			  List<JSONObject> list = sJob.executeJob(ApplicationConfig.getScrollQuery(i,threadSize));
  			   scrollId = sJob.getSrcollId();
- 			   System.out.println(scrollId);
  			   ExportDataTask task = new ExportDataTask(scrollId,list);
  			   exec.execute(task);
  		   }
- 		 // exec.shutdown();
- 		 // exec.awaitTermination(1,TimeUnit.HOURS);
+ 		   //以下控制着线程池
+ 		   Constant.LATCH.await();
+ 		   logger.info("拉数据线程结束..."); 
+ 		   exec.shutdown();
+ 		   //判断写文件线程是否已经结束
+ 	       while(true){  
+ 	        	boolean hasMoreAcquire = Constant.WRITE_FILE_THREAD.hasMoreAcquire();
+ 	        	boolean isTaskEnd = Constant.WRITE_FILE_THREAD.isTaskEnd();
+ 	           if(!hasMoreAcquire&&isTaskEnd){  
+ 	        	  Constant.WRITE_FILE_THREAD.shutdown();
+ 	              logger.info("文件写入都结束！程序停止。。。");  
+ 	               break;  
+ 	            }
+ 	           TimeUnit.SECONDS.sleep(10);
+ 	        }
+ 	       if(exec.isTerminated()){
+ 	    	  logger.info("程序退出..."); 
+ 	    	 // System.exit(-1);
+ 	       }
  		} catch (Exception e) {
  			//关闭线程池
  			if(exec!=null){

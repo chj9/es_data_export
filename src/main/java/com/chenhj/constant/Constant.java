@@ -1,5 +1,7 @@
 package com.chenhj.constant;
 
+import java.util.concurrent.CountDownLatch;
+
 import com.chenhj.thread.ThreadPoolManager;
 
 /**
@@ -29,12 +31,15 @@ public enum Constant {
 	public static final String TXT = "txt";
 	
 	public static final String GET ="GET";
-	public static final String POST ="POST";
+	public static final String POST ="POST"; 
+	public static final String DELETE ="DELETE";
 	public static final String ENCODE_UTF8="UTF-8";
 	/**
 	 * 写文件的线程
 	 */
 	public static ThreadPoolManager WRITE_FILE_THREAD = ThreadPoolManager.newInstance(1).build();
+	
+    public static CountDownLatch LATCH;
 	 /**
      * 逗号分隔符
      */

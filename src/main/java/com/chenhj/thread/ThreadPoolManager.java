@@ -176,10 +176,14 @@ public class ThreadPoolManager {
 	/**
 	 * 消息队列检查方法
 	 */
-	private boolean hasMoreAcquire() {
+	public boolean hasMoreAcquire() {
 		return !mTaskQueue.isEmpty();
 	}
-	protected boolean isTaskEnd() {
+	/**
+	 * 查看所有任务是否都已结束( ′◔ ‸◔`)
+	 * @return
+	 */
+	public boolean isTaskEnd() {
 		if (mThreadPool.getActiveCount() == 0) {
 			return true;
 		} else {
@@ -187,15 +191,15 @@ public class ThreadPoolManager {
 		}
 	}
 	public void shutdown() {
-		//清空队列的任务
-	if(mTaskQueue!=null)
-		mTaskQueue.clear();
-	//关闭缓存任务
-	if(scheduler!=null)
-		scheduler.shutdown();
-	//关闭线程池
-	if(mThreadPool!=null)
-		mThreadPool.shutdown();
+	    //清空队列的任务
+		if(mTaskQueue!=null)
+			mTaskQueue.clear();
+		//关闭缓存任务
+		if(scheduler!=null)
+			scheduler.shutdown();
+		//关闭线程池
+		if(mThreadPool!=null)
+			mThreadPool.shutdown();
 	}
 	/**
 	* @Description: 自定义线程名
@@ -205,7 +209,7 @@ public class ThreadPoolManager {
 			@Override
 			public Thread newThread(Runnable r) {
 				Thread t = new Thread(r);
-				String threadName = "montnets_mi_analyze_" + count.addAndGet(1);
+				String threadName = "write2file" + count.addAndGet(1);
 				t.setName(threadName);
 				return t;
 			}

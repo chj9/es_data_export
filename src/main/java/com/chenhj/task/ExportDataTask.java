@@ -56,6 +56,9 @@ public class ExportDataTask implements Runnable{
 					   count = count+list.size();
 					   Constant.WRITE_FILE_THREAD.addExecuteTask(new Write2FileTask(list));
 				  }else{
+					  esActionService.clearSrcoll(srcollId);
+					  //标记任务完成
+					  Constant.LATCH.countDown();
 					  logger.info(Thread.currentThread().getName()+"线程拉取完成.数据条数:"+count);
 					  break;
 				  }

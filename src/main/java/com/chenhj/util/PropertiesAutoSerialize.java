@@ -60,13 +60,13 @@ public class PropertiesAutoSerialize implements Serializable {
      * @throws FileNotFoundException 
      */
     private PropertiesAutoSerialize(String path, Class<?> clazz) throws FileNotFoundException {
-        this.propertiesFile = PropertiesAutoSerialize.class.getResourceAsStream(path);
+       // this.propertiesFile = PropertiesAutoSerialize.class.getResourceAsStream(path);
         //获取resource中的配置
 		File file =new File(path);
 		if(file.exists()){
 			this.propertiesFile=new FileInputStream(file);
 		}else{
-			this.propertiesFile=PropertiesUtil.class.getClassLoader().getResourceAsStream(path);
+			this.propertiesFile=PropertiesAutoSerialize.class.getClassLoader().getResourceAsStream(path);
 		}
         InputStreamReader isr = null;
         try {
