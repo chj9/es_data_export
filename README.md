@@ -2,8 +2,10 @@
 该工具实现从ES中导出数据,并且可以对导出的数据格式和数据文件做部分自定义(后面支持更多的自定义),该工具主要使用ES中srcoll接口多线程导出数据.
 
 # Design
+![Base](https://github.com/fanhua1994/BaseAndroid/blob/master/image/logo.png?raw=true)
 
 # Version
+版本号说明:大版本.新增功能.小补丁
 
 ## V1.2.4
 
@@ -52,13 +54,72 @@ $./run.sh
 - 修改global.properties文件配置
 - 运行App.java执行
 
-# Copyright and License
+# 配置文件名词解释
+## index   
+    数据索引
+## type
+     索引type,无则可留空,ES7.0以后删除
+## query
+    查询条件DSL,必须为ES的查询语句,可留空,默认:查询全部,条数1000
+## includes
+    取哪些字段的数据,逗号隔开,如果全部取则设为空
+## threadSize
+    获取数据线程数据,最大不超过索引的shards数量和CPU数量,默认为1
+## esserver
+    ES集群IP地址,逗号隔开,如:192.169.2.98:9200,192.169.2.156:9200,192.169.2.188:9200
+## esusername
+    如有帐号密码则填写,如果无则留空
+## espassword
+    如有帐号密码则填写,如果无则留空
+## isLineFeed
+    导出数据写入文件每条数据是否需要换行,默认:true
+## dataLayout
+    输出源数据形式,目前支持json、txt,下个版本支持sql、excel,如果为txt字段间是用逗号隔开,默认:json
+## filePath
+    数据输出文件路径,必填字段
+## fileName
+    输出的文件名,无则取默认:index
+## fileSize
+    每个文件多少条数据分割,需要则设置该项,该值应该比query的size大,如果设置该值则一个文件数据条数到达该数时则会分割,会有一点误差,分割文件名为fileName+文件数,单位:条
+## customFieldName
+    自定义字段名,将库里该字段取出来后换为该字段名,原字段名:替换后的字段名,多个逗号隔开,如phone:telphone
+## fieldSplit
+    字段以什么分割,不设置则默认英文逗号隔开
+## fieldSort
+     字段输出顺序(必设),必须和索引表字段名一样,逗号隔开
+## needFieldName
+    输出为txt的时候需要字段名字,默认:false,需要的时候以此形式输出类似:fieldName1=fieldValue1,fieldName2=fieldValue2
+## SSL_type
+    SSL类型
+## SSL_keyStorePath
+    密钥地址,文件地址
+## SSL_keyStorePass
+    密钥密码
+# 线程池设置
+关于threadSize设置设置为多少合适,这里给出的权重是
+-CPU核数>Shards>配置设置
+意思是配置的设置不能大于CPU核数也不能大于索引的shards数量。
+比如我是8核的机器,shards为15,配置设置20,最后取的线程数是8
+如果我是8核的机器,shards为15,配置设置7，最后取的是 7
+# 导出例子
+## 1、导出为json格式
+导出为json格式只需要设置以下,以下根据自己的设置进行设置
+```
+isLineFeed=true
+dataLayout=json
+filePath=F:\\pb_sa_phone\\test
+fileName=pb_sa_phone
+fileSize=1000
+customFieldName=
+```
+## 2、导出为txt格式
+以下是dataLayout=txt,为json时以下配置都无效的时候的自定义设置
+```
+fieldSplit=,
+fieldSort=phone
+needFieldName=false
+```
+# 联系作者
 
-Copyright 2018 chenhongjie
-
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-
+QQ:760515805
+wx:chj-95
