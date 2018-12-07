@@ -7,7 +7,7 @@ package com.chenhj.util;
 * Copyright: Copyright (c) 2018 Montnets
 * 
 * @ClassName: PropertiesAutoSerialize.java
-* @Description: 该类的功能描述
+* @Description: 该类用于将Properties文件中的参数,自动的设置到类同名字段中,前提是字段为静态的.
 *
 * @version: v1.0.0
 * @author: chenhj
@@ -26,10 +26,6 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * Created by wangankang on 16/8/28.
- * 该类用于将Properties文件中的参数,自动的设置到类同名字段中,前提是字段为静态的.
- */
 public class PropertiesAutoSerialize implements Serializable {
     /**
 	 *@Fields serialVersionUID : TODO

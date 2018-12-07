@@ -52,10 +52,14 @@ public class EsActionServiceImpl implements IEsActionService{
 	 private String endPoint1;
 	 private String endPoint2 ;
 	 private JSONObject params;
-	public EsActionServiceImpl() {
+	public EsActionServiceImpl() throws Exception {
 		 index = ApplicationConfig.getIndex();
 		 type = ApplicationConfig.getType();
-		 this.endPoint1 = index+"/"+type+"/_search?scroll=1h";
+		 this.endPoint1 = index+"/_search?scroll=1h";
+		 if(StringUtils.isNotBlank(type)){
+			 this.endPoint1 = index+"/"+type+"/_search?scroll=1h";
+
+		 }
 		 this.endPoint2 = "/_search/scroll"; 
 		 client = Rest.Client.getRestClient();
 	}
@@ -109,6 +113,7 @@ public class EsActionServiceImpl implements IEsActionService{
 		}else{
 			 logger.error("服务端响应异常,状态码:{},内容:{}",code,content);
 			 TimeUnit.SECONDS.sleep(120);
+			 client = Rest.Client.getRestClient();
 		}
 		} catch (Exception e) {
 			throw e;

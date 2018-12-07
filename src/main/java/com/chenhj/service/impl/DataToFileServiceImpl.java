@@ -5,6 +5,7 @@ package com.chenhj.service.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,9 +37,9 @@ import com.chenhj.util.FileUtil;
 */
 public class DataToFileServiceImpl implements IDataToFileService{
 	// 分文件导出
-	Map<Integer, Integer> jsonIndex = new HashMap<Integer, Integer>();
+	private  static Map<Integer, Integer> jsonIndex = new HashMap<Integer, Integer>();
 	private  static boolean  firstRun = true;
-	int index = 0; // 起始文件下标
+	private  static int index = 0; // 起始文件下标
 	String  basePath = ApplicationConfig.getFilePath();
 	String  fileName = ApplicationConfig.getFileName();
 	String  fileSize = ApplicationConfig.getFileSize();
@@ -48,9 +49,10 @@ public class DataToFileServiceImpl implements IDataToFileService{
 	boolean needFieldName  =ApplicationConfig.isNeedFieldName();
 	String  customFieldName= ApplicationConfig.getCustomFieldName();
 	String  dataLayout= ApplicationConfig.getDataLayout();
-	String flagFileName = "flag_montnets";
+	String  flagFileName = ".es_data_export";
+	String query = ApplicationConfig.getQuery();
 	@Override
-	public void write2File(List<JSONObject> list) throws Exception {
+	public  void write2File(List<JSONObject> list) throws Exception {
 		try {
 			int dataSize = list.size();
 			String flagFilePath = basePath +File.separator+flagFileName;
@@ -59,6 +61,7 @@ public class DataToFileServiceImpl implements IDataToFileService{
 			/*******************此处选出标记的文件*************************/
 			if(StringUtils.isNoneEmpty(fileSize)){
 				int num = Integer.valueOf(fileSize);
+				query = encry(query, "MD5");
 				if(firstRun){
 					try {
 						String flag  = FileUtil.fileRead(flagFilePath);
@@ -66,12 +69,19 @@ public class DataToFileServiceImpl implements IDataToFileService{
 						if(StringUtils.isNoneEmpty(flag)){
 							String flags[] = flag.split(",");
 							index = Integer.valueOf(flags[0]);
-							Integer count = Integer.valueOf(flags[1].trim());
-							if (count >= num) {
-								jsonIndex.put(++index, dataSize);
-							} else {
-								jsonIndex.put(index, count + dataSize);
-							}
+							String queryFlag = flags[2];
+							//判断再次启动查询条件有没有修改,如果已经修改,则从头写起
+							if(query.equals(queryFlag)){
+								Integer count = Integer.valueOf(flags[1].trim());
+								if (count >= num) {
+									jsonIndex.put(++index, dataSize);
+								} else {
+									jsonIndex.put(index, count + dataSize);
+								}
+							  }else{
+								  index = 0;
+								  jsonIndex.put(0, dataSize); 
+							  }
 						}else{
 							index = 0;
 							jsonIndex.put(0, dataSize);
@@ -85,7 +95,7 @@ public class DataToFileServiceImpl implements IDataToFileService{
 					index = sedAndGetIndex(dataSize,num);
 				}
 				filePath = basePath +File.separator+fileName+"_"+index;
-				flagStr = index+","+jsonIndex.get(index);
+				flagStr = index+Constant.COMMA_SIGN+jsonIndex.get(index)+Constant.COMMA_SIGN+query;
 			}else{
 				filePath = basePath +File.separator+fileName;
 			}
@@ -201,5 +211,29 @@ public class DataToFileServiceImpl implements IDataToFileService{
 			}
 		}
 		return oldkey;
+	}
+	private static final char hexDigits[] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+
+	private static String encry(String src, String type) throws Exception{
+		try {
+			byte[] input = src.getBytes("utf-8");
+			// 获得MD5摘要算法的 MessageDigest 对象
+			MessageDigest md = MessageDigest.getInstance(type);
+			// 使用指定的字节更新摘要
+	        md.update(input);
+	        // 获得密文
+	        input = md.digest();
+	        int j = input.length;
+	        char str[] = new char[j * 2];
+	        int k = 0;
+	        for (int i = 0; i < j; i++) {
+	            byte byte0 = input[i];
+	            str[k++] = hexDigits[byte0 >>> 4 & 0xf];
+	            str[k++] = hexDigits[byte0 & 0xf];
+	        }
+	        return new String(str).toLowerCase();
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 }

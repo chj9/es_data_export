@@ -27,7 +27,7 @@ import com.chenhj.service.impl.EsActionServiceImpl;
 public class ScrollMultJob {
 	private String scrollId;
 	private IEsActionService esActionService;
-	public ScrollMultJob(){
+	public ScrollMultJob() throws Exception{
 		esActionService = new EsActionServiceImpl();
 	}
 	public List<JSONObject> executeJob(String query) throws Exception{

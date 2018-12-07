@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="es_data_export" default="zip" basedir=".">
+<project name="es_data_export" default="copyAll" basedir=".">
 	<property name="build" value="build" />
 	<property name="target" value="target" />
 	<property name="word" value="docs/V1.0"/>
-	<property name="jar_version" value="ES数据导出工具V1.0(build 1)" />
-	<property name="routine" value="build/${jar_version}/程序包"/>
-	<property name="doc" value="build/${jar_version}/文档" />
+	<property name="routine" value="build"/>
 	
 	<target name="clean">
 		<delete dir="${target}" />
 		<delete dir="${build}" />
 		<delete dir="${routine}" />
-		<delete dir="${doc}" />
 		<delete dir="${script}" />
 	</target>
 
 	<target name="create-path" depends="clean">
 		<mkdir dir="${build}" />
-		<mkdir dir="${build}/${jar_version}" />
 	</target>
 
 	<target name="mvn_package" depends="create-path">
@@ -32,11 +28,7 @@
 		<copy todir="${routine}" file="logback.xml"></copy>
 		<copy todir="${routine}" file="run.sh"></copy>
 		<copy todir="${routine}" file="stop.sh"></copy>
-		<copy todir="${doc}" file="${word}/ES数据导出工具-改动说明.docx"></copy>
-		<copy todir="${doc}" file="${word}/ES数据导出工具-升级指导.docx"></copy>
-		<copy todir="${doc}" file="${word}/ES数据导出工具-验证方法.docx"></copy>
 
-		
 	</target>
 	
 	<!--文件打包-->

@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.chenhj.constant.Constant;
+import com.chenhj.constant.Pool;
 import com.chenhj.service.IEsActionService;
 import com.chenhj.service.impl.EsActionServiceImpl;
 /**   
@@ -54,11 +54,9 @@ public class ExportDataTask implements Runnable{
 			try {  
 				 if(list!=null&&!list.isEmpty()){
 					   count = count+list.size();
-					   Constant.WRITE_FILE_THREAD.addExecuteTask(new Write2FileTask(list));
+					   Pool.WRITE_FILE_POOL.addExecuteTask(new Write2FileTask(list));
 				  }else{
 					  esActionService.clearSrcoll(srcollId);
-					  //标记任务完成
-					  Constant.LATCH.countDown();
 					  logger.info(Thread.currentThread().getName()+"线程拉取完成.数据条数:"+count);
 					  break;
 				  }

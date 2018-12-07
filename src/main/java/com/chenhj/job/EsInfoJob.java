@@ -34,7 +34,7 @@ import com.chenhj.init.Rest;
 public class EsInfoJob {
 	
 	RestClient client;
-	public EsInfoJob(){
+	public EsInfoJob() throws Exception{
 		 client = Rest.Client.getRestClient();
 	}
 	/**
