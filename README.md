@@ -38,8 +38,18 @@
 ```
 $git clone git://github.com/760515805/es_data_export.git
 $cd es_data_export
+```
+如果已经安装了ant环境和maven环境则可以使用以下操作
+```
 $ant 
 $cd build
+$vim global.properties
+$./run.sh
+```
+如果只安装了maven环境则如下操作
+```
+$mvn clean package
+$cd target
 $vim global.properties
 $./run.sh
 ```
