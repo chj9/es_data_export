@@ -46,7 +46,7 @@ $./run.sh
 
 # Development
 ## 1.运行环境
-- IDE：IntelliJ IDEA
+- IDE：IntelliJ IDEA或者Eclipse
 - 项目构建工具：Maven
 
 ## 2.初始化项目
@@ -121,5 +121,5 @@ needFieldName=false
 ```
 # 联系作者
 
-QQ:760515805
-wx:chj-95
+##QQ:760515805
+##wx:chj-95
