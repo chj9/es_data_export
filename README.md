@@ -10,17 +10,20 @@
 
 ## V1.2.4
 
-&nbsp;&nbsp;1.加入线程池监控,在数据导出结束后正确停止程序。
+&nbsp;&nbsp;1.新增线程池监控,在数据导出结束后正确停止程序。<br>
+&nbsp;&nbsp;2.新增配置启动前验证配置是否正确,设置配置默认值。<br>
+&nbsp;&nbsp;3.优化异常日志输出,更好排查问题。
 
 ## V1.2.3
 
-&nbsp;&nbsp;1.优化写文件操作,使用队列。<br>
-&nbsp;&nbsp;2.支持文件写到一定大小后进行文件切割。
+&nbsp;&nbsp;1.优化写文件操作,使用BlockingQueue队列缓存。<br>
+&nbsp;&nbsp;2.新增支持文件写到一定大小后进行文件切割。<br>
+&nbsp;&nbsp;3.新增支持SSL加密获取数据。
 
 ## V1.2.2
 
-&nbsp;&nbsp;1.重构代码,取消自己写的HTTP请求，使用官方RestClient工具。<br>
-&nbsp;&nbsp;2.支持多线程拉取数据。
+&nbsp;&nbsp;1.重构代码,取消自己封装的HTTP工具，使用官方RestClient工具。<br>
+&nbsp;&nbsp;2.新增支持多线程拉取ES数据。
 
 ## V1.0.1
 
