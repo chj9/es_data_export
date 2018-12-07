@@ -2,7 +2,8 @@
 该工具实现从ES中导出数据,并且可以对导出的数据格式和数据文件做部分自定义(后面支持更多的自定义),该工具主要使用ES中srcoll接口多线程导出数据.
 
 # Design
-![Base](https://github.com/fanhua1994/BaseAndroid/blob/master/image/logo.png?raw=true)
+![Base](https://github.com/760515805/es_data_export/blob/master/docs/design.png)
+&nbsp;&nbsp;项目通过两个线程池实现功能,一个线程池主要从ElasticSearch获取数据,获取方式为es接口的Srcoll方式,多线程的话则通过slice切割数据.另一个线程池主要拿来写文件,使用BlockingQueue把数据缓冲到线程队列中，通过一条线程单线程写文件.
 
 # Version
 版本号说明:大版本.新增功能.小补丁
