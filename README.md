@@ -3,7 +3,7 @@
 
 # Design
 ![Base](https://github.com/760515805/es_data_export/blob/master/docs/design.png)
-&nbsp;&nbsp;项目通过两个线程池实现功能,一个线程池主要从ElasticSearch获取数据,获取方式为es接口的Srcoll方式,多线程的话则通过slice切割数据.另一个线程池主要拿来写文件,使用BlockingQueue把数据缓冲到线程队列中，通过一条线程单线程写文件.
+&nbsp;&nbsp;&nbsp;&nbsp;项目通过两个线程池实现功能,一个线程池主要从ElasticSearch获取数据,获取方式为es接口的Srcoll方式,多线程的话则通过slice切割数据.另一个线程池主要拿来写文件,使用BlockingQueue把数据缓冲到线程队列中，通过一条线程单线程写文件.
 
 # Version
 版本号说明:大版本.新增功能.小补丁
@@ -122,5 +122,5 @@ needFieldName=false
 ```
 # 联系作者
 
-##QQ:760515805
-##wx:chj-95
+## QQ:760515805
+## wx:chj-95
