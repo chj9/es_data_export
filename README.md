@@ -52,6 +52,7 @@ $./run.sh
 如果只安装了maven环境则如下操作
 ```
 $mvn clean package
+$cp global.properties run.sh stop.sh logback.xml  target/
 $cd target
 $vim global.properties
 $./run.sh
