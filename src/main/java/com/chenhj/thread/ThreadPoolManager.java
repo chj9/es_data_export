@@ -88,7 +88,7 @@ public class ThreadPoolManager {
 	/**创建一个调度线程池*/
 	private  ScheduledExecutorService scheduler = null;
 	/**通过调度线程周期性的执行缓冲队列中任务*/
-	ScheduledFuture<?> mTaskHandler = null;
+    ScheduledFuture<?> mTaskHandler = null;
 	/**线程池*/
 	private  ThreadPoolExecutor mThreadPool = null;
 	

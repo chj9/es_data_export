@@ -4,7 +4,7 @@
 
   <groupId>com.chenhj</groupId>
   <artifactId>es_data_export</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.2.3-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>es_data_export</name>
@@ -17,7 +17,13 @@
   		<logback>1.2.3</logback>
 		<slf4j>1.7.25</slf4j>
 		<poi>4.0.0</poi>
-		<elasticsearch>6.5.2</elasticsearch>
+		<!-- 数据库相关 -->
+		<druid>1.1.12</druid>
+		<mysql-connector>5.1.44</mysql-connector>
+		<sqlserver>4.0</sqlserver>
+		<postgresql>42.2.2</postgresql>
+
+		<elasticsearch>6.5.4</elasticsearch>
     	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     	<maven.compiler.source>1.8</maven.compiler.source>
 	  	<maven.compiler.target>1.8</maven.compiler.target>
@@ -61,6 +67,29 @@
 	    <artifactId>elasticsearch-rest-client</artifactId>
 	    <version>${elasticsearch}</version>
 	</dependency>
+	<!-- druid数据连接池依赖 -->
+	<dependency>
+		 <groupId>com.alibaba</groupId>
+		 <artifactId>druid</artifactId>
+		 <version>${druid}</version>
+	</dependency>
+	<!--SQL Server 驱动包 -->
+	<dependency>
+		<groupId>com.microsoft.sqlserver</groupId>
+		<artifactId>sqljdbc4</artifactId>
+		<version>${sqlserver}</version>
+	</dependency>
+	<!-- MySQL 连接驱动依赖 -->
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>${mysql-connector}</version>
+	</dependency>
+	<dependency>
+    	<groupId>org.postgresql</groupId>
+    	<artifactId>postgresql</artifactId>
+    	<version>${postgresql}</version>
+	</dependency>
   </dependencies>
   	<build>
 		<resources>
@@ -83,7 +112,7 @@
 			</resource>
 		</resources>
 		<defaultGoal>compile</defaultGoal>
-		<sourceDirectory>src</sourceDirectory>
+		<sourceDirectory>src/main</sourceDirectory>
 		<finalName>es_data_export</finalName>
     <plugins>  
         <plugin>  

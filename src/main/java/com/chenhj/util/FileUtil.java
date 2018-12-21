@@ -54,16 +54,33 @@ public class FileUtil {
 		}
 	}
 	/**
+	 * 判断文件是否存在和行数是否为0
+	 * 如果文件不存在或者行数为0则返回false
+	 * @param data
+	 * @throws IOException
+	 */
+	public static boolean isExist(String file) throws IOException {
+		File fw = new File(file);
+		if(!fw.exists()){
+			return false;
+		}
+		int line = getFileLine(fw);
+		if(line==0){
+			return false;
+		}
+		return true;
+	}
+	/**
 	 * 返回文件的行数
 	 * @param filePath
 	 * @return
 	 * @throws IOException
 	 */
-	public static int getFileLine(String filePath) throws IOException{
+	public static int getFileLine(File file) throws IOException{
 		LineNumberReader  lnr = null;
 		int line = 0;
 		try {
-			File file = new File(filePath);
+			//File file = new File(filePath);
 			lnr = new LineNumberReader(new FileReader(file));
 			lnr.skip(Long.MAX_VALUE);
 			line = lnr.getLineNumber() + 1;

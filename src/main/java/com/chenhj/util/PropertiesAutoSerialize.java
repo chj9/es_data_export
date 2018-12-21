@@ -128,6 +128,7 @@ public class PropertiesAutoSerialize implements Serializable {
                 if (null == (field = getField(key))) {
                     continue;
                 }
+                //不为静态不设置
                 if (!Modifier.isStatic(field.getModifiers())) {
                     continue;
                 }

@@ -26,6 +26,9 @@ public enum Constant {
 	public static final String LOGBACK_CONFIG_NAME = "logback.xml";
 	public static final String JSON = "json";
 	public static final String TXT = "txt";
+	public static final String EXCEL = "excel";
+	public static final String SQL = "sql";
+	public static final String CSV = "csv";
 	
 	public static final String GET ="GET";
 	public static final String POST ="POST"; 

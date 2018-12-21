@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.chenhj.service.IDataToFileService;
-import com.chenhj.service.impl.DataToFileServiceImpl;
+import com.chenhj.service.IWriteFileService;
+import com.chenhj.service.impl.WriteFileServiceImpl;
 
 /**   
 * Copyright: Copyright (c) 2018 Montnets
@@ -29,11 +29,11 @@ import com.chenhj.service.impl.DataToFileServiceImpl;
 */
 public class Write2FileTask implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(Write2FileTask.class);
-	private IDataToFileService dataToFileService;
+	private IWriteFileService dataToFileService;
 	private  List<JSONObject> list = null;
 	public Write2FileTask(List<JSONObject> list) {
 		this.list = list;
-		dataToFileService = new DataToFileServiceImpl();
+		dataToFileService = new WriteFileServiceImpl();
 	}
 	@Override
 	public void run() {

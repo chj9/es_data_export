@@ -31,7 +31,7 @@ public class ApplicationConfig{
 	private static String esserver;
 	private static String esusername;
 	private static String espassword;
-	private static Boolean isLineFeed;
+	private static Boolean isLineFeed=true;
 	private static String dataLayout;
 	private static String filePath;
 	private static String fileName;
@@ -39,15 +39,60 @@ public class ApplicationConfig{
 	private static String customFieldName;
 	private static String fieldSplit=Constant.COMMA_SIGN;
 	private static String fieldSort;
-	private static Boolean needFieldName;
+	private static Boolean needFieldName=false;
 	private static String sqlFormat;
 	private static String includes;
-	private static Integer threadSize;
+	private static Integer threadSize=1;
 	//SSL设置
 	private static String SSL_type;
 	private static String SSL_keyStorePath;
 	private static String SSL_keyStorePass;
+	//数据库
+	private static String jdbcUrl;
+	private static String jdbcDriver;
+	private static String jdbcUsername;
+	private static String jdbcPassword;
+	private static String jdbcInsertSql;
+	private static Integer jdbcInsertSize=10000;
 	
+	
+	
+	public static String getJdbcUrl() {
+		return jdbcUrl;
+	}
+	public static void setJdbcUrl(String jdbcUrl) {
+		ApplicationConfig.jdbcUrl = jdbcUrl;
+	}
+	public static String getJdbcDriver() {
+		return jdbcDriver;
+	}
+	public static void setJdbcDriver(String jdbcDriver) {
+		ApplicationConfig.jdbcDriver = jdbcDriver;
+	}
+	public static String getJdbcUsername() {
+		return jdbcUsername;
+	}
+	public static void setJdbcUsername(String jdbcUsername) {
+		ApplicationConfig.jdbcUsername = jdbcUsername;
+	}
+	public static String getJdbcPassword() {
+		return jdbcPassword;
+	}
+	public static void setJdbcPassword(String jdbcPassword) {
+		ApplicationConfig.jdbcPassword = jdbcPassword;
+	}
+	public static String getJdbcInsertSql() {
+		return jdbcInsertSql;
+	}
+	public static void setJdbcInsertSql(String jdbcInsertSql) {
+		ApplicationConfig.jdbcInsertSql = jdbcInsertSql;
+	}
+	public static Integer getJdbcInsertSize() {
+		return jdbcInsertSize;
+	}
+	public static void setJdbcInsertSize(Integer jdbcInsertSize) {
+		ApplicationConfig.jdbcInsertSize = jdbcInsertSize;
+	}
 	public static String getSSL_type() {
 		return SSL_type;
 	}

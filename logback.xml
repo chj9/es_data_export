@@ -97,7 +97,7 @@
 			</Pattern>
 		</layout>
 	</appender>
-    	<!-- ERROR日志配置 -->
+    	<!-- Monitor日志配置 -->
 	<appender name="Monitor" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<filter class="ch.qos.logback.classic.filter.LevelFilter">  
             <level>INFO</level>

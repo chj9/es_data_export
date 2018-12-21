@@ -22,7 +22,7 @@ import com.alibaba.fastjson.JSONObject;
 *---------------------------------------------------------*
 * 2018年11月17日     chenhj          v1.0.0               修改原因
 */
-public interface IDataToFileService {
+public interface IWriteFileService {
 		
 	public void write2File(List<JSONObject> list) throws Exception;
 }
