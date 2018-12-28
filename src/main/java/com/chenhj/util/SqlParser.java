@@ -76,9 +76,14 @@ public class SqlParser {
 		}
 		return null;
 	}
+	public static String sqlFormat(String sql){
+		sql =String.format(sql,SqlParser.getTableName(),StringUtils.join(SqlParser.getColumnList(), ","),StringUtils.join(SqlParser.getValueList(), ",")); 
+
+		return sql;
+	}
 	public static void main(String[] args) {
-		parserInsert("INSERT INTO table_name (phone,imid,aa) VALUES (?,?,'124');");
-		//System.out.println(tableName);
-		//System.out.println(sqlFormat("INSERT INTO %s (%s) VALUES (%s);"));
+		parserInsert("INSERT INTO table_name (phone,imid,aa) VALUES (#param,?,'124');");
+		System.out.println(tableName);
+		System.out.println(sqlFormat("INSERT INTO %s (%s) VALUES (%s);"));
 	}
 }

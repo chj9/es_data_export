@@ -40,7 +40,7 @@ public class ThreadPoolManager {
 	/**线程池所使用的缓冲队列大小**/
 	private static final int SIZE_WORK_QUEUE = 30;
 	/**任务调度周期**/
-	private static final int PERIOD_TASK_QOS = 1000;
+	private static final int PERIOD_TASK_QOS = 2000;
 	/**任务缓冲队列**/
 	public static BlockingQueue<Runnable> mTaskQueue = null;
 	/**

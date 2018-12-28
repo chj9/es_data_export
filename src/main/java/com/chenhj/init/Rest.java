@@ -39,7 +39,7 @@ import org.elasticsearch.client.RestClientBuilder.HttpClientConfigCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.chenhj.constant.ApplicationConfig;
+import com.chenhj.config.Config;
 import com.chenhj.constant.Constant;
 
 /**   
@@ -167,9 +167,9 @@ public enum Rest {
          });
     }
     private void setEsSSL() throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, KeyManagementException{
-    	String SSL_type  = ApplicationConfig.getSSL_type();
-    	String SSL_keyStorePath = ApplicationConfig.getSSL_keyStorePath();
-    	String SSL_keyStorePass= ApplicationConfig.getSSL_keyStorePass();
+    	String SSL_type  = Config.ES_CONFIG.getSsl_type();
+    	String SSL_keyStorePath = Config.ES_CONFIG.getSsl_keystorepath();
+    	String SSL_keyStorePass= Config.ES_CONFIG.getSsl_keystorepass();
     	if(StringUtils.isNotBlank(SSL_type)&&StringUtils.isNotBlank(SSL_keyStorePath)&&StringUtils.isNotBlank(SSL_keyStorePass)){
 	    	KeyStore truststore = KeyStore.getInstance(SSL_type);
 	    	Path path= Paths.get(SSL_keyStorePath);

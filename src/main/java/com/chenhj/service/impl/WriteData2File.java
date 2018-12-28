@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.chenhj.constant.ApplicationConfig;
+import com.chenhj.config.Config;
 import com.chenhj.constant.Constant;
 import com.chenhj.util.FileUtil;
 
@@ -33,11 +33,11 @@ import com.chenhj.util.FileUtil;
 * 2018年12月11日     chenhj          v1.0.0               修改原因
 */
 public class WriteData2File {
-	static String  customFieldName= ApplicationConfig.getCustomFieldName();
-	static boolean isLineFeed = ApplicationConfig.isLineFeed();
-	static String  fieldSplit= ApplicationConfig.getFieldSplit();
-	static String  fieldSort = ApplicationConfig.getFieldSort();
-	static boolean needFieldName  =ApplicationConfig.isNeedFieldName();
+	static String  customFieldName= Config.FILE_CONFIG.getCustom_field_name();
+	static boolean isLineFeed = Config.FILE_CONFIG.getLinefeed();
+	static String  fieldSplit=  Config.FILE_CONFIG.getField_split();
+	static String  fieldSort = Config.FILE_CONFIG.getField_sort();
+	static boolean needFieldName  =Config.FILE_CONFIG.getNeed_field_name();
 	
 	/**
 	 *写文件工具类
@@ -47,8 +47,6 @@ public class WriteData2File {
 	 * @throws IOException 
 	 */
 	public static void toWrite(List<JSONObject> list,String filePath,String fileType) throws IOException{
-		//判断文件和行数
-		//boolean flag = FileUtil.isExist(filePath);
 		//获取数据字符串集合
 		String str =getJsonStr(list,fileType);
 		
@@ -61,11 +59,15 @@ public class WriteData2File {
 				switch (fileType) {
 					case Constant.JSON:
 						sb.append(data.toJSONString());
-						if(isLineFeed)sb.append("\r\n");
+						if(isLineFeed){
+							sb.append("\r\n");
+						}
 						break;
 					case Constant.TXT:
 						sb.append(txtHandler(data,fieldSplit));
-						if(isLineFeed)sb.append("\r\n");
+						if(isLineFeed){
+							sb.append("\r\n");
+						}
 						break;
 					case Constant.EXCEL:
 						break;
@@ -89,6 +91,7 @@ public class WriteData2File {
 		return "";
 	} 
 	private static String sqlHandler(){
+		
 		return "";
 	}
 	private static String  csvHandler(JSONObject json){

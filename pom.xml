@@ -90,6 +90,11 @@
     	<artifactId>postgresql</artifactId>
     	<version>${postgresql}</version>
 	</dependency>
+	<dependency>
+	    <groupId>org.yaml</groupId>
+	    <artifactId>snakeyaml</artifactId>
+	    <version>1.23</version>
+	</dependency>
   </dependencies>
   	<build>
 		<resources>

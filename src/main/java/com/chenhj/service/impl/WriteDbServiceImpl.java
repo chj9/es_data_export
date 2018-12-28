@@ -33,7 +33,7 @@ import com.chenhj.util.FileUtil;
 *---------------------------------------------------------*
 * 2018年11月17日     chenhj          v1.0.0               修改原因
 */
-public class WriteFileServiceImpl implements IWriteFileService{
+public class WriteDbServiceImpl implements IWriteFileService{
 	// 分文件导出
 	private  static Map<Integer, Integer> jsonIndex = new HashMap<Integer, Integer>();
 	private  static boolean  firstRun = true;

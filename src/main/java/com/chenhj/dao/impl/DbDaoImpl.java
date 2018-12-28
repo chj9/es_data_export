@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.alibaba.fastjson.JSONObject;
-import com.chenhj.constant.ApplicationConfig;
+import com.chenhj.config.Config;
 import com.chenhj.dao.ConnectionManager;
 import com.chenhj.dao.DbDao;
 import com.chenhj.util.SqlParser;
@@ -39,10 +39,10 @@ public class DbDaoImpl implements DbDao {
 	private static final Logger logger = LoggerFactory.getLogger(DbDaoImpl.class);
 	private  ConnectionManager dbp =ConnectionManager.getInstance();
 	private static String sql = "INSERT INTO %s (%s) VALUES (%s);" ;
-	private static Integer insertSize = ApplicationConfig.getJdbcInsertSize();
+	private static Integer insertSize = Config.JDBC_CONFIG.getJdbc_size();
 	Map<String,Object> map;
 	public DbDaoImpl() {
-		map = SqlParser.parserInsert(ApplicationConfig.getJdbcInsertSql());
+		map = SqlParser.parserInsert(Config.JDBC_CONFIG.getJdbc_template());
 		sql =String.format(sql,SqlParser.getTableName(),StringUtils.join(SqlParser.getColumnList(), ","),StringUtils.join(SqlParser.getValueList(), ",")); 
 	}
 	@Override
@@ -62,7 +62,6 @@ public class DbDaoImpl implements DbDao {
 			if(size>insertSize){
 				list.subList(0, insertSize-1);
 			}
-			
 			for(JSONObject msg:list){
 				try {
 					dataFormat(statement,msg);	
@@ -91,10 +90,11 @@ public class DbDaoImpl implements DbDao {
 			if(obj instanceof String){
 				String value = String.valueOf(obj);
 				if(value.startsWith("##param")){
-					statement.setObject(i, json.get(value));
+					String v = SqlParser.getConfigParent(value);
+					statement.setObject(i, json.get(v));
+					i++;
 				}
 			}
-			i++;
 		}
 	}
 
