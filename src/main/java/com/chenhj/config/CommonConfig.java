@@ -22,9 +22,18 @@ import com.alibaba.fastjson.JSON;
 */
 public class CommonConfig {
 	private int thread_size = 1;
+	
+	private String banner;
 
 	public int getThread_size() {
 		return thread_size;
+	}
+	public String getBanner() {
+		return banner;
+	}
+
+	public void setBanner(String banner) {
+		this.banner = banner;
 	}
 
 	public void setThread_size(int thread_size) {

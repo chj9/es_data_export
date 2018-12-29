@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import com.chenhj.constant.Constant;
 import com.chenhj.init.InitConfig;
 import com.chenhj.init.InitConnection;
-import com.chenhj.init.LogBack;
-import com.chenhj.init.ThreadPool;
+import com.chenhj.init.InitLogBack;
+import com.chenhj.init.InitThreadPool;
 import com.chenhj.job.ThreadUtil;
 /**
  *ES数据导出入口类
@@ -18,7 +18,7 @@ public class App
 
     public static void main( String[] args )  {
     	try {
-    		LogBack.init();
+    		InitLogBack.init();
         	logger.info("Log Config Load the success...");	
         	//读取配置文件
         	InitConfig.init();
@@ -27,10 +27,16 @@ public class App
     		InitConnection.init();
     		logger.info("ElasticSearch Client Load the success...");	
     		//线程池初始化
-    		ThreadPool.init();
+    		InitThreadPool.init();
     		logger.info("ThreadPool Load the success...");
         	new ThreadUtil().startConsume();
         	logger.info("Running Success,Version:"+Constant.VERSION);
+//             _____    _    ______   __  _______  ______   ___  ____ _____  
+//        	  | ____|  / \  / ___\ \ / / | ____\ \/ /  _ \ / _ \|  _ \_   _| 
+//        	  |  _|   / _ \ \___ \\ V /  |  _|  \  /| |_) | | | | |_) || |   
+//        	  | |___ / ___ \ ___) || |   | |___ /  \|  __/| |_| |  _ < | |   
+//        	  |_____/_/   \_\____/ |_|   |_____/_/\_\_|    \___/|_| \_\|_|                                                               
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info("Running Failed",e);
@@ -39,6 +45,5 @@ public class App
 		}
     	
     }
-
-
+    
 }

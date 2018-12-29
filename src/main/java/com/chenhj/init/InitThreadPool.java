@@ -24,7 +24,7 @@ import com.chenhj.thread.ThreadPoolManager;
 *---------------------------------------------------------*
 * 2018年12月7日     chenhj          v1.0.0               修改原因
 */
-public class ThreadPool {
+public class InitThreadPool {
 	
 	public static void init() throws Exception{
 		   //写文件线程池

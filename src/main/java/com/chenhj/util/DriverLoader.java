@@ -11,6 +11,8 @@ import java.sql.Driver;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.alibaba.druid.util.JdbcConstants;
 /**   
 * Copyright: Copyright (c) 2018 Montnets
 * 
@@ -29,6 +31,7 @@ import org.slf4j.LoggerFactory;
 public class DriverLoader {
 	private static final Logger logger = LoggerFactory.getLogger(DriverLoader.class);
 	private static URLClassLoader loader;
+	private static String driverClass;
 	 /**
 	  * 加载对应路径jar包里的对应驱动
 	  * @param fname  对应路径  如: lib4/ojdbc14.jar
@@ -37,12 +40,13 @@ public class DriverLoader {
 	  * @throws Exception
 	  * @author tangxr
 	  */
-	 public static Driver getDriverLoaderByName (String fname,String dname)throws Exception {
+	 public static Driver getDriverLoaderByName (String fname,String driver)throws Exception {
+		 setDriverClassName(driver);
 		  if(StringUtils.isBlank(fname)){
 			  logger.error("对应的驱动路径不存在,请确认.");
 			  return null;
 		  }
-		  if(StringUtils.isBlank(dname)){
+		  if(StringUtils.isBlank(driverClass)){
 			  logger.error("对应的驱动类的名字不存在.");
 			  return null;
 		  }
@@ -53,6 +57,17 @@ public class DriverLoader {
 		  }
 		  loader = new URLClassLoader(new URL[] { file.toURI().toURL() });
 		  loader.clearAssertionStatus();
-		  return (Driver) loader.loadClass(dname).newInstance();
-  }
+		  return (Driver) loader.loadClass(driverClass).newInstance();
+	 }
+	 public static void setDriverClassName(String driver) {
+	        if (driver != null && driver.length() > 256) {
+	            throw new IllegalArgumentException("driverClassName length > 256.");
+	        }
+
+	        if (JdbcConstants.ORACLE_DRIVER2.equalsIgnoreCase(driver)) {
+	        	driver = "oracle.jdbc.OracleDriver";
+	            logger.warn("oracle.jdbc.driver.OracleDriver is deprecated.Having use oracle.jdbc.OracleDriver.");
+	        }
+	        driverClass = driver;
+	 }
 }

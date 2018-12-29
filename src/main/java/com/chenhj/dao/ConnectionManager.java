@@ -47,7 +47,7 @@ public class ConnectionManager {
 			/** 数据库连接池对象 **/
 			cpds = new DruidDataSource();
 			/** 设置数据库连接驱动 **/
-			cpds.setDriverClassName(driverName);
+			//cpds.setDriverClassName(driverName);
 			cpds.setDriver(DriverLoader.getDriverLoaderByName(jdbc_driver_library, driverName));
 			/** 设置数据库连接地址 **/
 			cpds.setUrl(url);
@@ -99,6 +99,29 @@ public class ConnectionManager {
 	public  final  Connection getConnection() throws SQLException {
 		return cpds.getConnection();
 	}
+	/**
+	 * 判断表是否存在
+	 * @param tableName
+	 * @return
+	 * @throws SQLException
+	 */
+    public boolean validateTableNameExist(String tableName) throws SQLException {  
+        Connection con= null;  
+        ResultSet rs = null;  
+       try {
+    	   con = getConnection();
+    	   rs = con.getMetaData().getTables(null, null, tableName, null); 
+	       if (rs.next()) {  
+	           return true;  
+	       }else {  
+	            return false;  
+	       }  
+	   	} catch (Exception e) {
+			throw e;
+		}finally {
+			close(rs,null,con);
+		}
+    }  
 	/**
 	 * 验证数据库连接是否有效
 	 * @return

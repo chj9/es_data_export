@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.chenhj.init;
+package com.chenhj.es;
 
 import java.io.IOException;
 import java.io.InputStream;

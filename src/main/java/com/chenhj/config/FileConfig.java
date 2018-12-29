@@ -32,13 +32,23 @@ public class FileConfig {
 	//文件路径
 	private  String filepath;
 	private  String filename;
-	private  String filesize;
+	private  String max_filesize;
 	private  String custom_field_name;
 	private  String field_split=Constant.COMMA_SIGN;
 	private  String field_sort;
 	private  Boolean need_field_name=false;
 	private  String sql_format;
 	
+	private String csv_headers;
+	
+	
+	
+	public String getCsv_headers() {
+		return csv_headers;
+	}
+	public void setCsv_headers(String csv_headers) {
+		this.csv_headers = csv_headers;
+	}
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -69,11 +79,12 @@ public class FileConfig {
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
-	public String getFilesize() {
-		return filesize;
+	
+	public String getMax_filesize() {
+		return max_filesize;
 	}
-	public void setFilesize(String filesize) {
-		this.filesize = filesize;
+	public void setMax_filesize(String max_filesize) {
+		this.max_filesize = max_filesize;
 	}
 	public String getCustom_field_name() {
 		return custom_field_name;

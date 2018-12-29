@@ -24,7 +24,7 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.chenhj.config.Config;
 import com.chenhj.constant.Constant;
-import com.chenhj.init.Rest;
+import com.chenhj.es.Rest;
 import com.chenhj.service.IEsActionService;
 
 /**   

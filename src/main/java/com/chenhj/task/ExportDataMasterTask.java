@@ -28,8 +28,8 @@ import com.chenhj.service.impl.EsActionServiceImpl;
 *---------------------------------------------------------*
 * 2018年8月6日     chenhj          v1.0.0               修改原因
 */
-public class ExportDataTask implements Runnable{
-	private static final Logger logger = LoggerFactory.getLogger(ExportDataTask.class);
+public class ExportDataMasterTask implements Runnable{
+	private static final Logger logger = LoggerFactory.getLogger(ExportDataMasterTask.class);
 	
 	private IEsActionService esActionService;
 	private String srcollId;
@@ -42,7 +42,7 @@ public class ExportDataTask implements Runnable{
 	 * @param list
 	 * @throws Exception
 	 */
-	public ExportDataTask(String scroll_id,List<JSONObject> list) throws Exception{
+	public ExportDataMasterTask(String scroll_id,List<JSONObject> list) throws Exception{
 		esActionService = new EsActionServiceImpl();
 		this.srcollId = scroll_id;
 		this.list= list;

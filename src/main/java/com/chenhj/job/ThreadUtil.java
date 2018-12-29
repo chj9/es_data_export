@@ -13,7 +13,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.chenhj.config.Config;
 import com.chenhj.constant.Constant;
 import com.chenhj.constant.Pool;
-import com.chenhj.task.ExportDataTask;
+import com.chenhj.task.ExportDataMasterTask;
 import com.chenhj.task.MonitorTask;
 
 
@@ -52,7 +52,7 @@ public class ThreadUtil {
  			   ScrollMultJob sJob = new ScrollMultJob();
  			   List<JSONObject> list = sJob.executeJob(getScrollQuery(i,nThreads));
  			   scrollId = sJob.getSrcollId();
- 			   ExportDataTask task = new ExportDataTask(scrollId,list);
+ 			   ExportDataMasterTask task = new ExportDataMasterTask(scrollId,list);
  			   Pool.EXECPool.execute(task);
  		   }
  		  //开启监控线程池线程

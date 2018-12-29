@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.chenhj.constant.Constant;
 import com.chenhj.constant.Pool;
-import com.chenhj.init.Rest;
+import com.chenhj.es.Rest;
 import com.chenhj.thread.ThreadPoolManager;
 
 /**   

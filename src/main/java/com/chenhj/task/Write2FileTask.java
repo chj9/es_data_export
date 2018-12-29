@@ -16,7 +16,7 @@ import com.chenhj.service.impl.WriteFileServiceImpl;
 * Copyright: Copyright (c) 2018 Montnets
 * 
 * @ClassName: Write2FileTask.java
-* @Description: 写数据任务类
+* @Description: 写文件任务类
 *
 * @version: v1.0.0
 * @author: chenhj
@@ -31,7 +31,7 @@ public class Write2FileTask implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(Write2FileTask.class);
 	private IWriteFileService dataToFileService;
 	private  List<JSONObject> list = null;
-	public Write2FileTask(List<JSONObject> list) {
+	public Write2FileTask(List<JSONObject> list) throws Exception {
 		this.list = list;
 		dataToFileService = new WriteFileServiceImpl();
 	}

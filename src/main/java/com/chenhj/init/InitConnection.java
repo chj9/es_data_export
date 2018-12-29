@@ -7,12 +7,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.chenhj.config.Config;
 import com.chenhj.dao.ConnectionManager;
+import com.chenhj.es.Rest;
 
 /**   
 * Copyright: Copyright (c) 2018 Montnets
 * 
 * @ClassName: InitConnection.java
-* @Description: 该类的功能描述
+* @Description: 测试连接是否正常
 *
 * @version: v1.0.0
 * @author: chenhj
@@ -34,6 +35,11 @@ public class InitConnection {
 			boolean flag = dbp.isValid();
 			if(!flag){
 				throw new Exception("DB 连接失败");
+			}
+			String tableName = Config.JDBC_CONFIG.getTableName();
+			boolean existTable = dbp.validateTableNameExist(tableName);
+			if(!existTable){
+				throw new IllegalAccessException(tableName+"表不存在,请检查jdbc_template是否书写正确！！！");
 			}
 			dbp = null;
 		}

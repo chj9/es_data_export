@@ -3,8 +3,11 @@
  */
 package com.chenhj.config;
 
+import java.util.Map;
+
 import com.alibaba.fastjson.JSON;
 import com.chenhj.init.InitConfig;
+import com.chenhj.util.SqlParser;
 
 /**   
 * Copyright: Copyright (c) 2018 Montnets
@@ -32,9 +35,24 @@ public class JdbcConfig {
   private Integer  jdbc_size = 10000;
   private String jdbc_template;
   
+  private String tableName;
+  
+  private Map<String,Integer> fieldMap;
+  
   private int jdbc_write_thread_size = 1;
   
-  public int getJdbc_write_thread_size() {
+  
+  
+  public String getTableName() {
+	return tableName;
+}
+public Map<String, Integer> getFieldMap() {
+	return fieldMap;
+}
+public void setFieldMap(Map<String, Integer> fieldMap) {
+	this.fieldMap = fieldMap;
+}
+public int getJdbc_write_thread_size() {
 	return jdbc_write_thread_size;
 }
 public void setJdbc_write_thread_size(int jdbc_write_thread_size) {
@@ -92,7 +110,7 @@ public String getJdbc_template() {
 	public  String toString(){
 		return JSON.toJSONString(this);  
 	}
-	public  void validation(){
+	public  void validation() throws IllegalAccessException{
 		if(enabled){
 			InitConfig.requireNonNull(jdbc_driver_library, "jdbc_driver_library 不能为null");
 			InitConfig.requireNonNull(jdbc_driver_class, "jdbc_driver_class不能为空");
@@ -100,6 +118,17 @@ public String getJdbc_template() {
 			InitConfig.requireNonNull(jdbc_user, "jdbc_user不能为空");
 			InitConfig.requireNonNull(jdbc_password, "jdbc_password不能为空");
 			InitConfig.requireNonNull(jdbc_template, "jdbc_template不能为空");
+			
+			//获得参数的标志位
+			fieldMap = SqlParser.getConfigParent(jdbc_template);
+			jdbc_template=SqlParser.toLegalSql(jdbc_template);
+			//验证sql合法性
+			if(!SqlParser.isInsertSql(jdbc_template)){
+				throw new IllegalAccessException("SQL jdbc_template 只支持insert和update");
+			};
+			tableName = SqlParser.getTableName();
+			InitConfig.requireNonNull(tableName, "tableName不能为空");
 		}
 	}  
+	
 }

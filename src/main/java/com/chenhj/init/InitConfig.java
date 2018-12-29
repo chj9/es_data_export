@@ -36,10 +36,6 @@ public class InitConfig {
 	 private static Map<String, String> map=null;
 	 public static void main(String[] args) throws Exception {
 		 InitConfig.init();
-		 System.out.println(Config.ES_CONFIG);
-		 System.out.println(Config.FILE_CONFIG);
-		 System.out.println(Config.JDBC_CONFIG);
-		 System.out.println(Config.COMMON_CONFIG);
 	}
 	 public static void init() throws Exception {
 		 map = new PropertiesUtil(Constant.CONFIG_NAME).loadProperties();
