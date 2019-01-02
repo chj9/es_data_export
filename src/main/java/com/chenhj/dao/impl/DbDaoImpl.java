@@ -9,15 +9,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.alibaba.fastjson.JSONObject;
-import com.chenhj.constant.ApplicationConfig;
+import com.chenhj.config.Config;
 import com.chenhj.dao.ConnectionManager;
 import com.chenhj.dao.DbDao;
-import com.chenhj.util.SqlParser;
 /**
  * 
 * Copyright: Copyright (c) 2018 Montnets
@@ -37,14 +34,10 @@ import com.chenhj.util.SqlParser;
 public class DbDaoImpl implements DbDao {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DbDaoImpl.class);
-	private  ConnectionManager dbp =ConnectionManager.getInstance();
-	private static String sql = "INSERT INTO %s (%s) VALUES (%s);" ;
-	private static Integer insertSize = ApplicationConfig.getJdbcInsertSize();
-	Map<String,Object> map;
-	public DbDaoImpl() {
-		map = SqlParser.parserInsert(ApplicationConfig.getJdbcInsertSql());
-		sql =String.format(sql,SqlParser.getTableName(),StringUtils.join(SqlParser.getColumnList(), ","),StringUtils.join(SqlParser.getValueList(), ",")); 
-	}
+	private static ConnectionManager dbp = ConnectionManager.getInstance();
+	private  String sql = Config.JDBC_CONFIG.getJdbc_template();
+	private  Integer insertSize = Config.JDBC_CONFIG.getJdbc_size();
+	private  Map<String,Integer> fieldMap = Config.JDBC_CONFIG.getFieldMap();
 	@Override
 	public synchronized void insert(List<JSONObject> list) throws SQLException {
 		//该sql语句是如果库中存在直接覆盖
@@ -58,48 +51,42 @@ public class DbDaoImpl implements DbDao {
 			conn.setAutoCommit(false);
 			//判断条数
 			int size = list.size();
-			
-			if(size>insertSize){
-				list.subList(0, insertSize-1);
+			List<JSONObject> listTemp = null;
+			//分批存入和写入DB数据,单批insertSize条
+			for(int i=0;i<=size;i+=insertSize){					
+					if(i+insertSize>size){       
+						insertSize=size-i; //作用为insertSize最后没有100条数据则剩余几条listTemp中就装几条
+			        }
+					listTemp =  list.subList(i,i+insertSize);
+					if(listTemp==null||listTemp.isEmpty()){
+						break;
+					}
+					for(JSONObject msg:listTemp){
+						try {
+							dataFormat(statement,msg);	
+						} catch (Exception e) {
+							logger.error("批量插入单条出错抛弃,数据:{},异常:{}",msg.toString(),e);
+							continue;
+						}
+						//完成一条语句的赋值
+						statement.addBatch();
+					}
+					//执行批量操作
+					statement.executeBatch();
+					//提交事务
+					conn.commit();
 			}
-			
-			for(JSONObject msg:list){
-				try {
-					dataFormat(statement,msg);	
-				} catch (Exception e) {
-					logger.error("批量插入单条出错抛弃,数据:{},异常:{}",msg.toString(),e);
-					continue;
-				}
-				//完成一条语句的赋值
-				statement.addBatch();
-			}
-			//执行批量操作
-			statement.executeBatch();
-			//提交事务
-			conn.commit();
 		} catch (SQLException e) {
 			throw e;
 		}finally{
 			dbp.close(null, statement, conn);
 		}
-		
 	}
 	private  void dataFormat(PreparedStatement  statement,JSONObject json) throws SQLException{
-		int i = 1;
-		for (Entry<String, Object> entry : map.entrySet()) {
-			Object obj = entry.getValue();
-			if(obj instanceof String){
-				String value = String.valueOf(obj);
-				if(value.startsWith("##param")){
-					statement.setObject(i, json.get(value));
-				}
-			}
-			i++;
+		for (Entry<String, Integer> entry : fieldMap.entrySet()) {
+			Integer  index = entry.getValue();
+			String key = entry.getKey();
+			statement.setObject(index,json.get(key));
 		}
 	}
-
-	public static void main(String[] args) {
-		
-	}
-
 }

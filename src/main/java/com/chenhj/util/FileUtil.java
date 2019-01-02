@@ -6,10 +6,13 @@ package com.chenhj.util;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -93,6 +96,37 @@ public class FileUtil {
 		}
 		return line;
 	}
+    /**
+     * 获取文件长度,单位B
+     * @param file
+     * @throws IOException 
+     */
+    public static long getFileSize(String filePath) throws Exception {
+        long fileSize = 0L;
+    	File file = null;
+        FileChannel fc= null;
+        FileInputStream fis = null;
+    	try {
+    		file = new File(filePath);
+    		if (file.exists() && file.isFile()){
+    			fis = new FileInputStream(file);
+    			fc= fis.getChannel();
+    			fileSize = fc.size();
+    		}else{
+    			fileSize = -1L;
+    		}
+    	} catch (FileNotFoundException e) {
+    		throw e;
+    	} finally {
+    		if (null!=fc){
+    			fc.close();
+    		} 
+    		if(fis!=null){
+    			fis.close();
+    		}
+    	}
+        return fileSize;
+    }
 	public static String fileRead(String filePath) throws Exception {
 		 BufferedReader bReader =  null;
 		try {
@@ -106,8 +140,8 @@ public class FileUtil {
         }
         String str = sb.toString();
         return str;
-		} catch (Exception e) {
-			throw e;
+		} catch (FileNotFoundException e) {
+			return null;
 		}finally{
 			if(bReader!=null){
 				 bReader.close();

@@ -22,11 +22,10 @@ public enum Constant {
 	/**
 	 * 配置文件
 	 */
-	public static final String CONFIG_NAME = "global.properties";
+	public static final String CONFIG_NAME = "export.properties";
 	public static final String LOGBACK_CONFIG_NAME = "logback.xml";
 	public static final String JSON = "json";
 	public static final String TXT = "txt";
-	public static final String EXCEL = "excel";
 	public static final String SQL = "sql";
 	public static final String CSV = "csv";
 	
@@ -35,6 +34,14 @@ public enum Constant {
 	public static final String DELETE ="DELETE";
 	public static final String ENCODE_UTF8="UTF-8";
 	public static final byte SUCCESS = 1;
+	//配置文件前缀
+	public static final String ELASTICSEARCH ="elasticsearch";
+	public static final String FILE ="file"; 
+	public static final String DB ="db";
+	public static final String COMMON ="common";
+	public static final String DOT="\\.";
+	
+	
 	 /**
      * 逗号分隔符
      */

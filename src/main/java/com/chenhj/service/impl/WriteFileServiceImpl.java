@@ -4,15 +4,10 @@
 package com.chenhj.service.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
-
 import com.alibaba.fastjson.JSONObject;
-import com.chenhj.constant.ApplicationConfig;
+import com.chenhj.config.Config;
 import com.chenhj.constant.Constant;
 import com.chenhj.service.IWriteFileService;
 import com.chenhj.util.EncryUtil;
@@ -35,31 +30,37 @@ import com.chenhj.util.FileUtil;
 */
 public class WriteFileServiceImpl implements IWriteFileService{
 	// 分文件导出
-	private  static Map<Integer, Integer> jsonIndex = new HashMap<Integer, Integer>();
-	private  static boolean  firstRun = true;
-	private  static int index = 0; // 起始文件下标
-	String  basePath = ApplicationConfig.getFilePath();
-	String  fileName = ApplicationConfig.getFileName();
-	String  fileSize = ApplicationConfig.getFileSize();
-
-	String  flagFileName = ".es_data_export";
-	String query = ApplicationConfig.getQuery();
-	String  dataLayout= ApplicationConfig.getDataLayout();
-
+	private  static Integer index=null; // 起始文件下标
+	String  basePath;
+	String  fileName;
+	String  max_filesize;
+	String  flagFileName;
+	String query;
+	String  dataLayout;
+	private WriteData2File writeData2File;
+	public WriteFileServiceImpl() throws Exception{
+		writeData2File = new WriteData2File();
+		basePath = Config.FILE_CONFIG.getFilepath();
+		fileName = Config.FILE_CONFIG.getFilename();
+		max_filesize = Config.FILE_CONFIG.getMax_filesize();
+		flagFileName = ".es_data_export";
+		query = Config.ES_CONFIG.getQuery();
+		dataLayout= Config.FILE_CONFIG.getDatalayout();
+		query = EncryUtil.encry(query, "MD5");
+	}
 	@Override
 	public  void write2File(List<JSONObject> list) throws Exception {
 		try {
 			String filePath = "";
 			/*******************此处选出标记的文件*************************/
 			//判断是否需要分割
-			if(StringUtils.isNoneEmpty(fileSize)){
-			int dataSize = list.size();
-			 filePath = splitFile(dataSize);
-			}else{
-				filePath = basePath +File.separator+fileName;
+			if(StringUtils.isNoneEmpty(max_filesize)){
+			  fileName = splitFile();
 			}
+			fileName = parserFileName(fileName, dataLayout);
+			filePath = basePath +File.separator+fileName;
 			/*********************************************/
-			WriteData2File.toWrite(list, filePath,dataLayout);
+			writeData2File.toWrite(list, filePath,dataLayout);
 		} catch (Exception e) {
 			throw e;
 		}
@@ -68,70 +69,57 @@ public class WriteFileServiceImpl implements IWriteFileService{
 	 * 文件切割算法
 	 * @throws Exception 
 	 */
-	public String splitFile(int dataSize) throws Exception{
-		String filePath = "";
-		String flagStr = "";
-		String flagFilePath = basePath +File.separator+flagFileName;
-			int num = Integer.valueOf(fileSize);
-			query = EncryUtil.encry(query, "MD5");
-			if(firstRun){
-				try {
-					String flag  = FileUtil.fileRead(flagFilePath);
-					//查看是否是第一批数据
-					if(StringUtils.isNoneEmpty(flag)){
-						String flags[] = flag.split(",");
-						index = Integer.valueOf(flags[0]);
-					//	String queryFlag = flags[2];
-						//判断再次启动查询条件有没有修改,如果已经修改,则从头写起
-					//	if(query.equals(queryFlag)){
-							Integer count = Integer.valueOf(flags[1].trim());
-							if (count >= num) {
-								jsonIndex.put(++index, dataSize);
-							} else {
-								jsonIndex.put(index, count + dataSize);
-							}
-					//	  }else{
-					//		  index = 0;
-					//		  jsonIndex.put(0, dataSize); 
-					//	  }
-					}else{
-						index = 0;
-						jsonIndex.put(0, dataSize);
-					}
-				} catch (FileNotFoundException e) {
-					index = 0;
-					jsonIndex.put(0, dataSize);
+	public String splitFile() throws Exception{
+		String fileName = "";
+		//String flagStr = "";
+		//KB转B
+		long max_size = Long.valueOf(max_filesize)*1024;
+		//String flagFilePath = basePath +File.separator+flagFileName;
+		 long fileSize =  FileUtil.getFileSize("");
+			//3,114,3f5ea8e4e6cfb52f90310413623f25f9
+		//	String flag  = FileUtil.fileRead(flagFilePath);
+			//查看是否是第一批数据
+			if(index!=null){
+				//String flags[] = flag.split(",");
+				//index = Integer.valueOf(flags[0]);
+				String filePath = basePath +File.separator+this.fileName+"_"+index;
+				//获取当前文件大小
+				fileSize =  FileUtil.getFileSize(filePath);
+				if (fileSize >= max_size) {
+					++index;
+				}else if(fileSize == -1){
+					index =0;
 				}
-				firstRun = false;
-			}else if(!firstRun){
-				index = sedAndGetIndex(dataSize,num);
+			}else{
+				index =0;
 			}
-			filePath = basePath +File.separator+fileName+"_"+index;
-			flagStr = index+Constant.COMMA_SIGN+jsonIndex.get(index)+Constant.COMMA_SIGN+query;
+			fileName = this.fileName+"_"+index;
+			//flagStr = index+Constant.COMMA_SIGN+query;
 			//将标记写入日志中,该方法用于多文件切割时候用到
-			FileUtil.clearInfoForFile(flagFilePath);
-			FileUtil.writeFile(flagFilePath,flagStr);
-			return filePath;
+			//FileUtil.clearInfoForFile(flagFilePath);
+			//FileUtil.writeFile(flagFilePath,flagStr);
+			return fileName;
 	} 
-	/**
-	 * 获取要写入的文件下标
-	 * @param size 数据长度
-	 * @param num 单个文件最大长度
-	 * @return
-	 */
-	public int sedAndGetIndex(int size,int num) {
-		
-		if (jsonIndex.size() == 0) {
-			jsonIndex.put(0, size);
-			return 0;
+	private  String parserFileName(String  fileName,String fileType) {
+		try {
+			switch (fileType) {
+					case Constant.SQL:
+						fileName= fileName+".sql";
+						break;
+					case Constant.CSV:
+						fileName= fileName+".csv";
+						break;
+					default:
+						break;
+				}
+		} catch (Exception e) {
+			throw (e);
 		}
-		int count = jsonIndex.get(index);
-		if (count >= num) {
-			jsonIndex.put(++index, size);
-		} else {
-			jsonIndex.put(index, count + size);
-		}
-		return index;
+		return fileName;
 	}
-
+	public static void main(String[] args) {
+		int i = 0;
+		i++;
+		System.out.println(i);
+	}
 }

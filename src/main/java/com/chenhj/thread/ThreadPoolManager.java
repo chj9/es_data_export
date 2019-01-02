@@ -38,9 +38,9 @@ public class ThreadPoolManager {
 	/**线程池维护线程所允许的空闲时间,超时时间为0,线程运行完后就关闭，而不会再等待超时时间 单位:秒**/
 	private static final long TIME_KEEP_ALIVE = 0L;
 	/**线程池所使用的缓冲队列大小**/
-	private static final int SIZE_WORK_QUEUE = 30;
+	private static final int SIZE_WORK_QUEUE = 1;
 	/**任务调度周期**/
-	private static final int PERIOD_TASK_QOS = 1000;
+	private static final int PERIOD_TASK_QOS = 2000;
 	/**任务缓冲队列**/
 	public static BlockingQueue<Runnable> mTaskQueue = null;
 	/**

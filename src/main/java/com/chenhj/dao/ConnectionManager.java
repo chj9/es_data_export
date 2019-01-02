@@ -11,7 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.chenhj.constant.ApplicationConfig;
+import com.chenhj.config.Config;
+import com.chenhj.util.DriverLoader;
 /**   
 * Copyright: Copyright (c) 2018 Montnets
 * 
@@ -34,17 +35,20 @@ public class ConnectionManager {
 	private static volatile ConnectionManager dbConnection;
 	/**
 	 * 在构造函数初始化的时候获取数据库连接
+	 * @throws Exception 
 	 */
-	private ConnectionManager(){
+	private ConnectionManager() throws Exception{
 		/** 获取属性文件中的值 **/
-		String driverName = ApplicationConfig.getJdbcDriver();
-		String url = ApplicationConfig.getJdbcUrl();
-		String username = ApplicationConfig.getJdbcUsername();
-		String password = ApplicationConfig.getJdbcPassword();	
+		String jdbc_driver_library = Config.JDBC_CONFIG.getJdbc_driver_library();
+		String driverName = Config.JDBC_CONFIG.getJdbc_driver_class();
+		String url = Config.JDBC_CONFIG.getJdbc_connection_string();
+		String username = Config.JDBC_CONFIG.getJdbc_user();
+		String password = Config.JDBC_CONFIG.getJdbc_password();	
 			/** 数据库连接池对象 **/
 			cpds = new DruidDataSource();
 			/** 设置数据库连接驱动 **/
-			cpds.setDriverClassName(driverName);
+			//cpds.setDriverClassName(driverName);
+			cpds.setDriver(DriverLoader.getDriverLoaderByName(jdbc_driver_library, driverName));
 			/** 设置数据库连接地址 **/
 			cpds.setUrl(url);
 			/** 设置数据库连接用户名 **/
@@ -69,12 +73,17 @@ public class ConnectionManager {
 	 * 获取数据库连接对象，单例
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public static ConnectionManager getInstance() {
+	public synchronized static ConnectionManager getInstance(){
 		if (dbConnection == null) {
 			synchronized (ConnectionManager.class) {
 				if (dbConnection == null) {
-					dbConnection = new ConnectionManager();
+					try {
+						dbConnection = new ConnectionManager();
+					} catch (Exception e) {
+						LOG.error("获取DB连接失败...",e);
+					}
 				}
 			}
 		}
@@ -90,6 +99,29 @@ public class ConnectionManager {
 	public  final  Connection getConnection() throws SQLException {
 		return cpds.getConnection();
 	}
+	/**
+	 * 判断表是否存在
+	 * @param tableName
+	 * @return
+	 * @throws SQLException
+	 */
+    public boolean validateTableNameExist(String tableName) throws SQLException {  
+        Connection con= null;  
+        ResultSet rs = null;  
+       try {
+    	   con = getConnection();
+    	   rs = con.getMetaData().getTables(null, null, tableName, null); 
+	       if (rs.next()) {  
+	           return true;  
+	       }else {  
+	            return false;  
+	       }  
+	   	} catch (Exception e) {
+			throw e;
+		}finally {
+			close(rs,null,con);
+		}
+    }  
 	/**
 	 * 验证数据库连接是否有效
 	 * @return

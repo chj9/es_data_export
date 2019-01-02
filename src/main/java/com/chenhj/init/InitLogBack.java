@@ -28,7 +28,7 @@ import ch.qos.logback.core.util.StatusPrinter;
 *---------------------------------------------------------*
 * 2018年12月7日     chenhj          v1.0.0               修改原因
 */
-public class LogBack {
+public class InitLogBack {
 	
 	public static void init() throws Exception{
  		//String configFilepathName = FilePathHelper.getFilePathWithJar("logback.xml");

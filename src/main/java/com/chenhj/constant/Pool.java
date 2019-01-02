@@ -28,6 +28,11 @@ public enum Pool {
 	 * 写文件的线程
 	 */
 	public static ThreadPoolManager WRITE_FILE_POOL = null;
+	/**
+	 * 写数据库线程池
+	 */
+	public static ThreadPoolManager WRITE_DB_POOL = null;
     //public  static CountDownLatch LATCH = null;
     public static ExecutorService EXECPool=null;
+   // public static ConnectionManager DB_POOL_Connection = null;
 }

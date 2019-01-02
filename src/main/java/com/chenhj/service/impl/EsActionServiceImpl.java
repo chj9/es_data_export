@@ -22,9 +22,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.chenhj.constant.ApplicationConfig;
+import com.chenhj.config.Config;
 import com.chenhj.constant.Constant;
-import com.chenhj.init.Rest;
+import com.chenhj.es.Rest;
 import com.chenhj.service.IEsActionService;
 
 /**   
@@ -53,8 +53,8 @@ public class EsActionServiceImpl implements IEsActionService{
 	 private String endPoint2 ;
 	 private JSONObject params;
 	public EsActionServiceImpl() throws Exception {
-		 index = ApplicationConfig.getIndex();
-		 type = ApplicationConfig.getType();
+		 index = Config.ES_CONFIG.getIndex();
+		 type = Config.ES_CONFIG.getDocument_type();
 		 this.endPoint1 = index+"/_search?scroll=1h";
 		 if(StringUtils.isNotBlank(type)){
 			 this.endPoint1 = index+"/"+type+"/_search?scroll=1h";

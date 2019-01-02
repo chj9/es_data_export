@@ -14,7 +14,7 @@ import org.elasticsearch.client.RestClient;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.chenhj.constant.Constant;
-import com.chenhj.init.Rest;
+import com.chenhj.es.Rest;
 
 /**   
 * Copyright: Copyright (c) 2018 Montnets

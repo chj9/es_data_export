@@ -9,14 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.chenhj.service.IWriteFileService;
-import com.chenhj.service.impl.WriteFileServiceImpl;
-
+import com.chenhj.dao.DbDao;
+import com.chenhj.dao.impl.DbDaoImpl;
 /**   
 * Copyright: Copyright (c) 2018 Montnets
 * 
 * @ClassName: Write2FileTask.java
-* @Description: 写文件任务类
+* @Description: 写DB任务类
 *
 * @version: v1.0.0
 * @author: chenhj
@@ -27,20 +26,22 @@ import com.chenhj.service.impl.WriteFileServiceImpl;
 *---------------------------------------------------------*
 * 2018年12月6日     chenhj          v1.0.0               修改原因
 */
-public class Write2FileTask implements Runnable {
-	private static final Logger logger = LoggerFactory.getLogger(Write2FileTask.class);
-	private IWriteFileService dataToFileService;
+public class Write2DbTask implements Runnable {
+	private static final Logger logger = LoggerFactory.getLogger(Write2DbTask.class);
+	private DbDao dbDao; 
 	private  List<JSONObject> list = null;
-	public Write2FileTask(List<JSONObject> list) throws Exception {
+	public Write2DbTask(List<JSONObject> list) {
 		this.list = list;
-		dataToFileService = new WriteFileServiceImpl();
+		dbDao = new DbDaoImpl();
 	}
 	@Override
 	public void run() {
 		 try {
-			dataToFileService.write2File(list);
+			 
+			 dbDao.insert(list);
+			 return;
 		} catch (Exception e) {
-			logger.error("Write File fail:",e);
+			logger.error("Write DB fail:",e);
 		}
 	}
 }

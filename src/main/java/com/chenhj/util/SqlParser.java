@@ -2,20 +2,16 @@
  * 
  */
 package com.chenhj.util;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlInsertStatement;
+import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
+import com.alibaba.druid.sql.ast.statement.SQLUpdateStatement;
 import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
+import com.alibaba.fastjson.JSONObject;
 
 /**   
 * Copyright: Copyright (c) 2018 Montnets
@@ -33,52 +29,83 @@ import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
 * 2018年12月21日     chenhj          v1.0.0               修改原因
 */
 public class SqlParser {
-	private static String tableName;
-	private static List<String> columnList;
-	private static List<Object> valueList;
-	public static Map<String,Object> parserInsert(String sql){
+	public static String  tableName;
+	public static boolean isInsertSql(String sql){
 		MySqlStatementParser parser = new MySqlStatementParser(sql);
 		SQLStatement statement = parser.parseStatement();
-		MySqlInsertStatement insert = (MySqlInsertStatement)statement;
-		Map<String,Object> map  = new LinkedHashMap<>();
-		List<SQLExpr> columns = insert.getColumns();  // 获得所有列名
-		List<SQLExpr> valuse = insert.getValues().getValues();
-		int size = columns.size();
-		columnList = new ArrayList<>();
-		valueList = new ArrayList<>();
-		for(int i=0;i<size;i++){
-			SQLExpr sqlco =columns.get(i);
-			map.put(sqlco.toString(), valuse.get(i));
-			columnList.add(sqlco.toString());
-			valueList.add(valuse.get(i));
+		if(statement instanceof SQLInsertStatement){
+			SQLInsertStatement insert =(SQLInsertStatement) statement; 
+			tableName = insert.getTableName().toString();
+			return true;
+		}else if(statement instanceof SQLUpdateStatement){
+			SQLUpdateStatement update =(SQLUpdateStatement) statement; 
+			tableName = update.getTableName().toString();
+			return true;
 		}
-		tableName = insert.getTableName().toString();
-		return map;
+		return false;
 	}
 	public static String getTableName() {
 		return tableName;
 	}
-	public static List<String> getColumnList() {
-		return columnList;
-	}
-	public static List<Object> getValueList() {
-		return valueList;
-	}
+	private static Pattern regex = Pattern.compile("\\#param\\{([^}]*)\\}");
 	/**
-	 * 获取${}中的值
+	 * 获取#param{}中的值
 	 * @param str
 	 */
-	public static String getConfigParent(String str){
-		Pattern regex = Pattern.compile("\\#param\\{([^}]*)\\}");
+	public static Map<String,Integer> getConfigParent(String str){
 		Matcher matcher = regex.matcher(str);
+		Map<String,Integer> map = new HashMap<>();
+		int i =1;
 		while(matcher.find()) {
-		    return matcher.group(1);
+		   map.put(matcher.group(1),i);
+		   i++;
 		}
-		return null;
+		return map;
+	}
+	/**
+	 * 替换#param{}中的值变为?
+	 * @param str
+	 */
+	public static String toLegalSql(String configSql){
+		Matcher matcher = regex.matcher(configSql);
+		//把符合正则的数据替换成"?"
+		configSql=matcher.replaceAll("?");
+	    return configSql;
+	}
+	/**
+	 * 替换#param{}中的值变为JSON中对应的key的值
+	 * @param str
+	 */
+	public static String replaceToValue(String configSql,JSONObject json){
+		Matcher matcher = regex.matcher(configSql);
+		//configSql=matcher.replaceAll("?");
+		while(matcher.find()) {
+			  String key = matcher.group(1);
+			  Object value = json.get(key);
+			  if(value instanceof String){
+				  configSql=configSql.replace("#param{"+key+"}","'"+value+"'");
+			  }else{
+				  configSql=configSql.replace("#param{"+key+"}",value+"");
+			  }
+		}
+	    return configSql;
 	}
 	public static void main(String[] args) {
-		parserInsert("INSERT INTO table_name (phone,imid,aa) VALUES (?,?,'124');");
+		//parserInsert("INSERT INTO table_name (phone,imid,aa) VALUES (#param{phone},?,'124');");
 		//System.out.println(tableName);
 		//System.out.println(sqlFormat("INSERT INTO %s (%s) VALUES (%s);"));
+		JSONObject json = new JSONObject();
+		json.put("phone",15302789406L);
+		json.put("imid","asdfg");
+		String sql = "INSERT INTO table_name (phone,aa,imid,aa) VALUES (#param{phone},'nihao',#param{imid},'124');";
+		//String sql ="UPDATE table_name SET field1=new-value1, field2=new-value2 WHERE ID = #param{phone}";
+		//获得参数的标志位
+//		System.out.println(getConfigParent(sql));
+//		sql = toLegalSql(sql);
+//		//替换标志位的字符
+//		System.out.println(sql);
+//		//验证sql合法性
+//		System.out.println(isInsertSql(sql));
+		System.out.println(replaceToValue(sql,json));
 	}
 }

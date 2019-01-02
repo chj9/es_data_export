@@ -13,16 +13,12 @@
   <properties>
   		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-  		<fastjson>1.2.41</fastjson>
+  		<fastjson>1.2.54</fastjson>
   		<logback>1.2.3</logback>
 		<slf4j>1.7.25</slf4j>
 		<poi>4.0.0</poi>
 		<!-- 数据库相关 -->
 		<druid>1.1.12</druid>
-		<mysql-connector>5.1.44</mysql-connector>
-		<sqlserver>4.0</sqlserver>
-		<postgresql>42.2.2</postgresql>
-
 		<elasticsearch>6.5.4</elasticsearch>
     	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     	<maven.compiler.source>1.8</maven.compiler.source>
@@ -72,23 +68,6 @@
 		 <groupId>com.alibaba</groupId>
 		 <artifactId>druid</artifactId>
 		 <version>${druid}</version>
-	</dependency>
-	<!--SQL Server 驱动包 -->
-	<dependency>
-		<groupId>com.microsoft.sqlserver</groupId>
-		<artifactId>sqljdbc4</artifactId>
-		<version>${sqlserver}</version>
-	</dependency>
-	<!-- MySQL 连接驱动依赖 -->
-	<dependency>
-		<groupId>mysql</groupId>
-		<artifactId>mysql-connector-java</artifactId>
-		<version>${mysql-connector}</version>
-	</dependency>
-	<dependency>
-    	<groupId>org.postgresql</groupId>
-    	<artifactId>postgresql</artifactId>
-    	<version>${postgresql}</version>
 	</dependency>
   </dependencies>
   	<build>

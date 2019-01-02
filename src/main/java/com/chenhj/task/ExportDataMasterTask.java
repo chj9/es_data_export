@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
+import com.chenhj.config.Config;
 import com.chenhj.constant.Pool;
 import com.chenhj.service.IEsActionService;
 import com.chenhj.service.impl.EsActionServiceImpl;
@@ -27,21 +28,26 @@ import com.chenhj.service.impl.EsActionServiceImpl;
 *---------------------------------------------------------*
 * 2018年8月6日     chenhj          v1.0.0               修改原因
 */
-public class ExportDataTask implements Runnable{
-	private static final Logger logger = LoggerFactory.getLogger(ExportDataTask.class);
+public class ExportDataMasterTask implements Runnable{
+	private static final Logger logger = LoggerFactory.getLogger(ExportDataMasterTask.class);
 	
 	private IEsActionService esActionService;
 	private String srcollId;
 	private  List<JSONObject> list = null;
+	//启用标志
+	private boolean  jdbcEnabled;
+	private boolean  fileEnabled;
 	/**
 	 * @param scroll_id
 	 * @param list
 	 * @throws Exception
 	 */
-	public ExportDataTask(String scroll_id,List<JSONObject> list) throws Exception{
+	public ExportDataMasterTask(String scroll_id,List<JSONObject> list) throws Exception{
 		esActionService = new EsActionServiceImpl();
 		this.srcollId = scroll_id;
 		this.list= list;
+		this.jdbcEnabled=Config.JDBC_CONFIG.isEnabled();
+		this.fileEnabled =Config.FILE_CONFIG.isEnabled();
 	}
 	@Override
 	public void run() {
@@ -54,7 +60,14 @@ public class ExportDataTask implements Runnable{
 			try {  
 				 if(list!=null&&!list.isEmpty()){
 					   count = count+list.size();
-					   Pool.WRITE_FILE_POOL.addExecuteTask(new Write2FileTask(list));
+					   //写文件
+					   if(fileEnabled){
+						   Pool.WRITE_FILE_POOL.addExecuteTask(new Write2FileTask(list));
+					   }
+					   //写DB
+					   if(jdbcEnabled){
+						   Pool.WRITE_DB_POOL.addExecuteTask(new Write2DbTask(list));
+					   }
 				  }else{
 					  esActionService.clearSrcoll(srcollId);
 					  logger.info(Thread.currentThread().getName()+"线程拉取完成.数据条数:"+count);
