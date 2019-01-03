@@ -6,55 +6,28 @@
 &nbsp;&nbsp;&nbsp;&nbsp;项目通过两个线程池实现功能,一个线程池主要从ElasticSearch获取数据,获取方式为es接口的Srcoll方式,多线程的话则通过slice切割数据.另一个线程池主要拿来写文件,使用BlockingQueue把数据缓冲到线程队列中，通过一条线程单线程写文件.
 
 # Project Code Structure
-###########目录结构描述
-├─build 编译好的jar文件
-├─docs 相关文档
-├─lib 测试需要使用到的jar包，与项目无关
-├─src
-│  └─main
-│    └─java
-│        └─com
-│            └─chenhj
-│                ├─config  项目配置参数目录
-│                ├─constan 项目常数目录
-│                ├─dao
-│                │  └─imp 数据库接口实现
-│                ├─es     ES连接工厂
-│                ├─init   项目部分连接池，连接初始化
-│                ├─job    部分功能工作目录
-│                ├─service
-│                │  └─imp 项目服务实现目录
-│                ├─task   项目任务线程实现目录
-│                ├─thread 线程池工厂
-│                └─util   工具目录
-└─resources
 
-###########目录结构描述
-├── Readme.md                   // help
-├── app                         // 应用
-├── config                      // 配置
-│   ├── default.json
-│   ├── dev.json                // 开发环境
-│   ├── experiment.json         // 实验
-│   ├── index.js                // 配置控制
-│   ├── local.json              // 本地
-│   ├── production.json         // 生产环境
-│   └── test.json               // 测试环境
-├── data
-├── doc                         // 文档
-├── environment
-├── gulpfile.js
-├── locales
-├── logger-service.js           // 启动日志配置
-├── node_modules
-├── package.json
-├── app-service.js              // 启动应用配置
-├── static                      // web静态资源加载
-│   └── initjson
-│       └── config.js         // 提供给前端的配置
-├── test
-├── test-service.js
-└── tools
+├─build 编译好的jar文件</br>
+├─docs 相关文档</br>
+├─lib 测试需要使用到的jar包，与项目无关</br>
+├─src</br>
+│&nbsp;&nbsp;└─main</br>
+│&nbsp;&nbsp;&nbsp;└─java</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└─com</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─chenhj</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─config  项目配置参数目录</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─constan 项目常数目录</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─dao</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;└─imp 数据库接口实现</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─es     ES连接工厂</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─init   项目部分连接池，连接初始化</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─job    部分功能工作目录</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─service</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;└─imp 项目服务实现目录</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─task   项目任务线程实现目录</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─thread 线程池工厂</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─util   工具目录</br>
+└─resources</br>
 
 run.sh：编译好的jar包启动脚本,也可使用java -jar启动，Linux下可用</br>
 stop.sh：已启动的jar包停止脚本，也可使用kill停止,Linux下可用</br>
