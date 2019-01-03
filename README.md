@@ -155,7 +155,7 @@ $./run.sh
     每个文件多大进行分割,需要则设置该项,实际是有误差的,如果不需要分割文件留空即可,单位:KB
 ## file.custom_field_name
     自定义字段名,将库里该字段取出来后换为该字段名,原字段名:替换后的字段名,多个逗号隔开,如phone:telphone
-## db.enabled=false
+## db.enabled
     是否启用写入数据库
 ## db.jdbc_driver_library
     驱动jar包地址，如lib/mysql-connector-java-5.1.47.jar，可以自定义自己数据库版本的驱动包，指定地址即可
@@ -169,7 +169,7 @@ $./run.sh
     数据库密码
 ## db.jdbc_template
     插入数据模版,其中#param{ES字段}来取ES的值，如：INSERT INTO test111 (name) VALUES (#param{simuid})
-## db.jdbc_size=10000
+## db.jdbc_size
     单批次最大插入多少,默认10000
 ## db.jdbc_write_thread_size
     同时写DB线程数,默认1
