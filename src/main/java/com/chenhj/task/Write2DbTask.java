@@ -37,7 +37,6 @@ public class Write2DbTask implements Runnable {
 	@Override
 	public void run() {
 		 try {
-			 
 			 dbDao.insert(list);
 			 return;
 		} catch (Exception e) {

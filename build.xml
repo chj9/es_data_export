@@ -24,7 +24,7 @@
 
 	<target name="copyAll" depends="mvn_package">
 		<copy todir="${routine}" file="${target}/es_data_export.jar"></copy> 
-		<copy todir="${routine}" file="global.properties"></copy>
+		<copy todir="${routine}" file="export.properties"></copy>
 		<copy todir="${routine}" file="logback.xml"></copy>
 		<copy todir="${routine}" file="run.sh"></copy>
 		<copy todir="${routine}" file="stop.sh"></copy>
