@@ -25,9 +25,7 @@ public class ThreadUtil {
 		nThreads = Config.COMMON_CONFIG.getThread_size();
 	}
 	/**
-	 * 启动topic所有分区的消费
-	 * @param topic
-	 * 				需要启动消费的topic名
+	 * 启动所有线程池
 	 * @throws Exception 
 	 */
 	public void startConsume() throws Exception{

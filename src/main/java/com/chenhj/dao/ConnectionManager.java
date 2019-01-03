@@ -30,7 +30,7 @@ import com.chenhj.util.DriverLoader;
 */
 public class ConnectionManager {
 	private static Logger LOG = LoggerFactory.getLogger(ConnectionManager.class);
-	/** 定义c3p0 连接池的数据源 */
+	/** 定义连接池的数据源 */
 	private static DruidDataSource cpds =null;
 	private static volatile ConnectionManager dbConnection;
 	/**
