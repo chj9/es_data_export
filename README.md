@@ -93,7 +93,7 @@ $./run.sh
 如果只安装了maven环境则如下操作
 ```
 $mvn clean package
-$cp global.properties run.sh stop.sh logback.xml  target/
+$cp export.properties run.sh stop.sh logback.xml  target/
 $cd target
 $vim export.properties
 $./run.sh
@@ -107,7 +107,7 @@ $./run.sh
 
 ## 2.初始化项目
 - 打开IntelliJ IDEA，将项目导入
-- 修改global.properties文件配置
+- 修改export.properties文件配置
 - 运行App.java执行
 
 # 配置文件名词解释
