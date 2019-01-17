@@ -32,26 +32,53 @@ import com.chenhj.thread.ThreadPoolManager;
 */
 public class MonitorTask implements  Callable<Byte>{
 	private static final Logger logger = LoggerFactory.getLogger("Monitor");
+	private static final Logger log = LoggerFactory.getLogger(MonitorTask.class);
 	private ThreadPoolExecutor tpe = ((ThreadPoolExecutor) Pool.EXECPool);
 	private ThreadPoolManager filePool = Pool.WRITE_FILE_POOL;
+	private ThreadPoolManager DbPool = Pool.WRITE_DB_POOL;
+	private ThreadPoolManager KafkaPool = Pool.WRITE_KAFKA_POOL;
 	@Override
 	public Byte call() throws Exception {
 	    //监控拉取数据的线程池
 	    while (true) {
 	    	boolean flag = getDataPool();
 	    	if(flag){
+	    		log.info("ES is finished scroll, Stop the scroll thread pool...");
 	    		break;
 	    	}
 	    }
 	    //关闭ES连接
 	    Rest.Client.getRestClient().close();
 	    //监控写文件线程是否已经结束
-	    while (true) {
-	    	boolean flag = writeFilePool();
-	    	if(flag){
-	    		break;
-	    	}
-		}
+	    if(filePool!=null){
+		    while (true) {
+		    	boolean flag = writeFilePool();
+		    	if(flag){
+		    		log.info("File is finished writing, Stop the writing thread pool...");
+		    		break;
+		    	}
+			}
+	    }
+	    //监控写DB线程是否已经结束
+	    if(DbPool!=null){
+		    while (true) {
+		    	boolean flag = writeDbPool();
+		    	if(flag){
+		    		log.info("DB is finished writing, Stop the writing thread pool...");
+		    		break;
+		    	}
+			}
+	    }
+	    //监控写kafka线程是否已经结束
+	    if(KafkaPool!=null){
+		    while (true) {
+		    	boolean flag = writeKafkaPool();
+		    	if(flag){
+		    		log.info("Kafka is finished writing, Stop the writing thread pool...");
+		    		break;
+		    	}
+			}
+	    }
 		return Constant.SUCCESS;
 	}
 	public boolean getDataPool() throws InterruptedException{
@@ -83,6 +110,38 @@ public class MonitorTask implements  Callable<Byte>{
 	     if(!hasMoreAcquire&&isTaskEnd&&activeCount==0){  
 	    	 	filePool.shutdown();
 	            logger.info(">>>>>WRITE_FILE_POOL Shutdown...");  
+	            flag = true;  
+	     }
+	    TimeUnit.SECONDS.sleep(3);
+		return flag;
+	}
+	public boolean writeDbPool() throws InterruptedException{
+		boolean flag = false;
+	     boolean hasMoreAcquire = DbPool.hasMoreAcquire();
+	     boolean isTaskEnd = DbPool.isTaskEnd();
+			int queueSize = DbPool.getNumQueue(); 
+			logger.info("WRITE_Db_POOL>>Queue:" + queueSize);
+			int activeCount = DbPool.getNumActive(); 
+			logger.info("WRITE_Db_POOL>>Active:" + activeCount); 
+	     if(!hasMoreAcquire&&isTaskEnd&&activeCount==0){  
+	    	   DbPool.shutdown();
+	            logger.info(">>>>>WRITE_Db_POOL Shutdown...");  
+	            flag = true;  
+	     }
+	    TimeUnit.SECONDS.sleep(3);
+		return flag;
+	}
+	public boolean writeKafkaPool() throws InterruptedException{
+		boolean flag = false;
+	     boolean hasMoreAcquire = KafkaPool.hasMoreAcquire();
+	     boolean isTaskEnd = KafkaPool.isTaskEnd();
+			int queueSize = KafkaPool.getNumQueue(); 
+			logger.info("WRITE_Kafka_POOL>>Queue:" + queueSize);
+			int activeCount = KafkaPool.getNumActive(); 
+			logger.info("WRITE_Kafka_POOL>>Active:" + activeCount); 
+	     if(!hasMoreAcquire&&isTaskEnd&&activeCount==0){  
+	    	 	KafkaPool.shutdown();
+	            logger.info(">>>>>WRITE_Kafka_POOL Shutdown...");  
 	            flag = true;  
 	     }
 	    TimeUnit.SECONDS.sleep(3);

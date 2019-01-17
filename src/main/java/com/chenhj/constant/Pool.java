@@ -32,6 +32,11 @@ public enum Pool {
 	 * 写数据库线程池
 	 */
 	public static ThreadPoolManager WRITE_DB_POOL = null;
+	/**
+	 * 写kafka线程池
+	 */
+	public static ThreadPoolManager WRITE_KAFKA_POOL = null;
     //public  static CountDownLatch LATCH = null;
     public static ExecutorService EXECPool=null;
+   // public static ConnectionManager DB_POOL_Connection = null;
 }

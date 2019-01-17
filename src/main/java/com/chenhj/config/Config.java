@@ -23,6 +23,7 @@ public enum Config {
 	public static EsConfig ES_CONFIG;
 	public static JdbcConfig JDBC_CONFIG;
 	public static FileConfig FILE_CONFIG;
+	public static KafkaConfig Kafka_CONFIG;
 	public static CommonConfig COMMON_CONFIG;
 	
 }

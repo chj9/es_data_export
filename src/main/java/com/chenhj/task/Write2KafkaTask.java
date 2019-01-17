@@ -9,13 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.chenhj.dao.DbDao;
-import com.chenhj.dao.impl.DbDaoImpl;
+import com.chenhj.service.IWriteKafkaService;
+import com.chenhj.service.impl.WriteKafkaServiceImpl;
+
 /**   
 * Copyright: Copyright (c) 2018 Montnets
 * 
 * @ClassName: Write2FileTask.java
-* @Description: 写DB任务类
+* @Description: 写文件任务类
 *
 * @version: v1.0.0
 * @author: chenhj
@@ -26,21 +27,20 @@ import com.chenhj.dao.impl.DbDaoImpl;
 *---------------------------------------------------------*
 * 2018年12月6日     chenhj          v1.0.0               修改原因
 */
-public class Write2DbTask implements Runnable {
-	private static final Logger logger = LoggerFactory.getLogger(Write2DbTask.class);
-	private DbDao dbDao; 
+public class Write2KafkaTask implements Runnable {
+	private static final Logger logger = LoggerFactory.getLogger(Write2KafkaTask.class);
 	private  List<JSONObject> list = null;
-	public Write2DbTask(List<JSONObject> list) {
+	private IWriteKafkaService kafkaService;
+	public Write2KafkaTask(List<JSONObject> list) throws Exception {
 		this.list = list;
-		dbDao = new DbDaoImpl();
+		kafkaService = new WriteKafkaServiceImpl();
 	}
 	@Override
 	public void run() {
 		 try {
-			 dbDao.insert(list);
-			 return;
+			 kafkaService.write2Kafka(list);
 		} catch (Exception e) {
-			logger.error("Write DB fail:",e);
+			logger.error("Write Kafka fail:",e);
 		}
 	}
 }

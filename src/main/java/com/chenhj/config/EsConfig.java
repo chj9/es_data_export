@@ -4,6 +4,8 @@
 package com.chenhj.config;
 
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.alibaba.fastjson.JSON;
 import com.chenhj.init.InitConfig;
 
@@ -34,9 +36,26 @@ public class EsConfig {
 	private  String ssl_keystorepath;
 	private  String ssl_keystorepass;
 	
+	private boolean justGetId;
+	
+	private boolean justGetSource;
+	
 	private String includes;
 	
 	
+	
+	public boolean isJustGetId() {
+		return justGetId;
+	}
+	public void setJustGetId(boolean justGetId) {
+		this.justGetId = justGetId;
+	}
+	public boolean isJustGetSource() {
+		return justGetSource;
+	}
+	public void setJustGetSource(boolean justGetSource) {
+		this.justGetSource = justGetSource;
+	}
 	public String getIncludes() {
 		return includes;
 	}
@@ -101,11 +120,14 @@ public class EsConfig {
 		return JSON.toJSONString(this);  
 	}
 	public  void validation(){
+		//查看下启动jar包的时候时候自定义输入过参数值  java -Dquery=参数值 -Dindex=test -Ddocument_type=test1 -jar es_data_export
+		//注意：-D和Para之间不能有空格
+		String queryRun= System.getProperty("query");
+		if(StringUtils.isNotBlank(queryRun)){
+			query = queryRun;
+		}
 		InitConfig.requireNonNull(index, "index 不能为空");
-		//requireNonNull(type, "");
-		//requireNonNull(query, message);
 		InitConfig.requireNonNull(hosts, "hosts集群地址不能为空");
-		//requireNonNull(esusername, message);
-		//requireNonNull(espassword, message);
+
 	}
 }

@@ -14,6 +14,7 @@ import com.chenhj.config.Config;
 import com.chenhj.config.EsConfig;
 import com.chenhj.config.FileConfig;
 import com.chenhj.config.JdbcConfig;
+import com.chenhj.config.KafkaConfig;
 import com.chenhj.constant.Constant;
 import com.chenhj.util.PropertiesUtil;
 
@@ -34,9 +35,7 @@ import com.chenhj.util.PropertiesUtil;
 */
 public class InitConfig {
 	 private static Map<String, String> map=null;
-	 public static void main(String[] args) throws Exception {
-		 InitConfig.init();
-	}
+
 	 public static void init() throws Exception {
 		 map = new PropertiesUtil(Constant.CONFIG_NAME).loadProperties();
 		 if(map!=null){
@@ -46,6 +45,7 @@ public class InitConfig {
 			 EsConfig esConfig = new EsConfig();
 			 FileConfig fileConfig = new FileConfig();
 			 JdbcConfig jdbcConfig = new JdbcConfig();
+			 KafkaConfig kafkaConfig = new KafkaConfig();
 			 CommonConfig commonConfig = new CommonConfig();
 			 //加载配置文件的参数
 			 for(Map.Entry<String, String> entry : map.entrySet()){
@@ -70,6 +70,9 @@ public class InitConfig {
 						case Constant.COMMON:
 							setConfig(commonConfig,field,value);
 							break;
+						case Constant.KAFKA:
+							setConfig(kafkaConfig,field,value);
+							break;
 						default:
 							break;
 						}
@@ -78,11 +81,13 @@ public class InitConfig {
 			 esConfig.validation();
 			 fileConfig.validation();
 			 jdbcConfig.validation();
+			 kafkaConfig.validation();
 			 //赋值全局变量
 			 Config.ES_CONFIG = esConfig;
 			 Config.FILE_CONFIG = fileConfig;
 			 Config.JDBC_CONFIG = jdbcConfig;
 			 Config.COMMON_CONFIG = commonConfig;
+			 Config.Kafka_CONFIG = kafkaConfig;
 		 }
 	 }
 	 private static  void setConfig(Object obj,String key,String value) throws Exception{

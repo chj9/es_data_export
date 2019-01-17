@@ -37,6 +37,7 @@ public class ExportDataMasterTask implements Runnable{
 	//启用标志
 	private boolean  jdbcEnabled;
 	private boolean  fileEnabled;
+	private boolean  kafkaEnabled;
 	/**
 	 * @param scroll_id
 	 * @param list
@@ -48,6 +49,7 @@ public class ExportDataMasterTask implements Runnable{
 		this.list= list;
 		this.jdbcEnabled=Config.JDBC_CONFIG.isEnabled();
 		this.fileEnabled =Config.FILE_CONFIG.isEnabled();
+		this.kafkaEnabled = Config.Kafka_CONFIG.isEnabled();
 	}
 	@Override
 	public void run() {
@@ -67,6 +69,10 @@ public class ExportDataMasterTask implements Runnable{
 					   //写DB
 					   if(jdbcEnabled){
 						   Pool.WRITE_DB_POOL.addExecuteTask(new Write2DbTask(list));
+					   }
+					   //写kafka
+					   if(kafkaEnabled){
+						   Pool.WRITE_KAFKA_POOL.addExecuteTask(new Write2KafkaTask(list));
 					   }
 				  }else{
 					  esActionService.clearSrcoll(srcollId);

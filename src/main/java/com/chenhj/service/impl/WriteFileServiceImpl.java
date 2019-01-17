@@ -30,7 +30,7 @@ import com.chenhj.util.FileUtil;
 */
 public class WriteFileServiceImpl implements IWriteFileService{
 	// 分文件导出
-	private  static int index = 0; // 起始文件下标
+	private  static Integer index=null; // 起始文件下标
 	String  basePath;
 	String  fileName;
 	String  max_filesize;
@@ -55,7 +55,6 @@ public class WriteFileServiceImpl implements IWriteFileService{
 			/*******************此处选出标记的文件*************************/
 			//判断是否需要分割
 			if(StringUtils.isNoneEmpty(max_filesize)){
-			 // int dataSize = list.size();
 			  fileName = splitFile();
 			}
 			fileName = parserFileName(fileName, dataLayout);
@@ -72,17 +71,17 @@ public class WriteFileServiceImpl implements IWriteFileService{
 	 */
 	public String splitFile() throws Exception{
 		String fileName = "";
-		String flagStr = "";
+		//String flagStr = "";
 		//KB转B
 		long max_size = Long.valueOf(max_filesize)*1024;
-		String flagFilePath = basePath +File.separator+flagFileName;
+		//String flagFilePath = basePath +File.separator+flagFileName;
 		 long fileSize =  FileUtil.getFileSize("");
 			//3,114,3f5ea8e4e6cfb52f90310413623f25f9
-			String flag  = FileUtil.fileRead(flagFilePath);
+		//	String flag  = FileUtil.fileRead(flagFilePath);
 			//查看是否是第一批数据
-			if(StringUtils.isNoneEmpty(flag)){
-				String flags[] = flag.split(",");
-				index = Integer.valueOf(flags[0]);
+			if(index!=null){
+				//String flags[] = flag.split(",");
+				//index = Integer.valueOf(flags[0]);
 				String filePath = basePath +File.separator+this.fileName+"_"+index;
 				//获取当前文件大小
 				fileSize =  FileUtil.getFileSize(filePath);
@@ -92,13 +91,13 @@ public class WriteFileServiceImpl implements IWriteFileService{
 					index =0;
 				}
 			}else{
-				index = 0;
+				index =0;
 			}
 			fileName = this.fileName+"_"+index;
-			flagStr = index+Constant.COMMA_SIGN+query;
+			//flagStr = index+Constant.COMMA_SIGN+query;
 			//将标记写入日志中,该方法用于多文件切割时候用到
-			FileUtil.clearInfoForFile(flagFilePath);
-			FileUtil.writeFile(flagFilePath,flagStr);
+			//FileUtil.clearInfoForFile(flagFilePath);
+			//FileUtil.writeFile(flagFilePath,flagStr);
 			return fileName;
 	} 
 	private  String parserFileName(String  fileName,String fileType) {

@@ -27,13 +27,19 @@ import com.chenhj.thread.ThreadPoolManager;
 public class InitThreadPool {
 	
 	public static void init() throws Exception{
-		   //写文件线程池
-		   Pool.WRITE_FILE_POOL = ThreadPoolManager.newInstance(1).build();
 		   //拉取数据线程池
 		   Pool.EXECPool = Executors.newFixedThreadPool(Config.COMMON_CONFIG.getThread_size()); 
-		   
-		   Pool.WRITE_DB_POOL = ThreadPoolManager.newInstance(Config.JDBC_CONFIG.getJdbc_write_thread_size()).build();
- 	       //计数器
-		  // Pool.LATCH = new CountDownLatch(threadSize);
+		   //写文件线程池
+		   if(Config.FILE_CONFIG.isEnabled()){
+			   Pool.WRITE_FILE_POOL = ThreadPoolManager.newInstance(1).build();
+		   }
+ 	       //写DB线程池
+		   if(Config.JDBC_CONFIG.isEnabled()){
+			   Pool.WRITE_DB_POOL = ThreadPoolManager.newInstance(Config.JDBC_CONFIG.getJdbc_write_thread_size()).build();
+		   }
+ 	       //写Kafka线程池
+		   if(Config.Kafka_CONFIG.isEnabled()){
+			   Pool.WRITE_KAFKA_POOL = ThreadPoolManager.newInstance(Config.Kafka_CONFIG.getWrite_thread_size()).build();
+		   }
 	}
 }

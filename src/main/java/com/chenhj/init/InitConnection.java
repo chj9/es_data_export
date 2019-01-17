@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.chenhj.config.Config;
 import com.chenhj.dao.ConnectionManager;
 import com.chenhj.es.Rest;
+import com.chenhj.util.kafka.KafkaUtil;
 
 /**   
 * Copyright: Copyright (c) 2018 Montnets
@@ -26,10 +27,12 @@ import com.chenhj.es.Rest;
 */
 public class InitConnection {
 	private static boolean  jdbcEnabled;
+	private static boolean  kafkaEnabled;
 	public static void init() throws Exception{
 		 initEs();
 		//如果启用了DB,检查DB连接
 		jdbcEnabled=Config.JDBC_CONFIG.isEnabled();
+		kafkaEnabled = Config.Kafka_CONFIG.isEnabled();
 		if(jdbcEnabled){
 			ConnectionManager dbp =ConnectionManager.getInstance();
 			boolean flag = dbp.isValid();
@@ -42,6 +45,9 @@ public class InitConnection {
 				throw new IllegalAccessException(tableName+"表不存在,请检查jdbc_template是否书写正确！！！");
 			}
 			dbp = null;
+		}
+		if(kafkaEnabled){
+			initKafka();
 		}
 	}
     /**
@@ -58,5 +64,12 @@ public class InitConnection {
 			rest.validation(username, password);
 		}
 		rest.build();
+    }
+    /**
+     * 初始化Kafka的连接
+     * @throws IllegalAccessException 
+     */
+    private static  void initKafka() throws Exception{
+    	  KafkaUtil.validation();
     }
 }

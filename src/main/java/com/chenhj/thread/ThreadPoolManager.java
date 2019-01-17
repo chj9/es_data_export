@@ -38,7 +38,7 @@ public class ThreadPoolManager {
 	/**线程池维护线程所允许的空闲时间,超时时间为0,线程运行完后就关闭，而不会再等待超时时间 单位:秒**/
 	private static final long TIME_KEEP_ALIVE = 0L;
 	/**线程池所使用的缓冲队列大小**/
-	private static final int SIZE_WORK_QUEUE = 30;
+	private static final int SIZE_WORK_QUEUE = 1;
 	/**任务调度周期**/
 	private static final int PERIOD_TASK_QOS = 2000;
 	/**任务缓冲队列**/
@@ -90,14 +90,14 @@ public class ThreadPoolManager {
 	/**通过调度线程周期性的执行缓冲队列中任务*/
     ScheduledFuture<?> mTaskHandler = null;
 	/**线程池*/
-	private  ThreadPoolExecutor mThreadPool = null;
+	private  MyThreadPool mThreadPool = null;
 	
 	private  ThreadPoolManager build(ThreadPoolManager builder) {
 		 namedThreadFactory = new CustomThreadFactory();
 		 scheduler          = new ScheduledThreadPoolExecutor(SIZE_CORE_POOL,namedThreadFactory,mHandler);
 		 mTaskHandler       = scheduler.scheduleAtFixedRate(mAccessBufferThread, 0,
 							  PERIOD_TASK_QOS,TimeUnit.MILLISECONDS);
-		 mThreadPool        =new ThreadPoolExecutor(SIZE_CORE_POOL, SIZE_MAX_POOL,
+		 mThreadPool        =new MyThreadPool(SIZE_CORE_POOL, SIZE_MAX_POOL,
 							TIME_KEEP_ALIVE,TimeUnit.SECONDS,mTaskQueue,namedThreadFactory,mHandler);
 		 return this;
 	 }
@@ -116,6 +116,8 @@ public class ThreadPoolManager {
 			// 核心改造点，由blockingqueue的offer改成put阻塞方法
 			//	mTaskQueue.offer(task);
 		}
+		
+
 	};
 	/**
 	 * 将缓冲队列中的任务重新加载到线程池
@@ -127,6 +129,7 @@ public class ThreadPoolManager {
 				mThreadPool.execute(mTaskQueue.poll());
 			}
 		}
+		
 	};
 
 	
@@ -209,9 +212,42 @@ public class ThreadPoolManager {
 			@Override
 			public Thread newThread(Runnable r) {
 				Thread t = new Thread(r);
-				String threadName = "write2file" + count.addAndGet(1);
+				String threadName = "es_data_export" + count.addAndGet(1);
 				t.setName(threadName);
 				return t;
 			}
+	}
+	/**
+	* @Description: 自定义线程名
+	 */
+	private class MyThreadPool extends ThreadPoolExecutor {
+
+		/**
+		 * @param corePoolSize
+		 * @param maximumPoolSize
+		 * @param keepAliveTime
+		 * @param unit
+		 * @param workQueue
+		 * @param threadFactory
+		 * @param handler
+		 */
+		public MyThreadPool(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
+				BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler) {
+			super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
+		}
+		//任务执行前，执行后和线程池关闭前干一些事情。如监控任务的平均执行时间，最大执行时间和最小执行时间
+		@Override
+		public void beforeExecute(Thread t, Runnable r){
+			
+		}
+		@Override
+		public void afterExecute(Runnable r, Throwable t) { 
+			
+		}
+		@Override
+		public void terminated(){
+			
+		}
+			
 	}
 }

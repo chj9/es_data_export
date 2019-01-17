@@ -25,13 +25,15 @@ public class ThreadUtil {
 		nThreads = Config.COMMON_CONFIG.getThread_size();
 	}
 	/**
-	 * 启动topic所有分区的消费
-	 * @param topic
-	 * 				需要启动消费的topic名
+	 * 启动所有线程池
 	 * @throws Exception 
 	 */
 	public void startConsume() throws Exception{
 		try {
+			if(!Config.FILE_CONFIG.isEnabled()&&!Config.JDBC_CONFIG.isEnabled()&&!Config.Kafka_CONFIG.isEnabled()){
+				LOG.info("文件也不写,DB也不入,kafka也不写,你拉数据下来干啥....程序退出!!");
+				System.exit(-1);
+			}
 			exportDataTask();
 		} catch (Exception e) {
 			throw e;

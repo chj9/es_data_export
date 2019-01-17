@@ -34,7 +34,7 @@ import com.chenhj.dao.DbDao;
 public class DbDaoImpl implements DbDao {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DbDaoImpl.class);
-	private  ConnectionManager dbp =ConnectionManager.getInstance();
+	private static ConnectionManager dbp = ConnectionManager.getInstance();
 	private  String sql = Config.JDBC_CONFIG.getJdbc_template();
 	private  Integer insertSize = Config.JDBC_CONFIG.getJdbc_size();
 	private  Map<String,Integer> fieldMap = Config.JDBC_CONFIG.getFieldMap();
@@ -59,7 +59,7 @@ public class DbDaoImpl implements DbDao {
 			        }
 					listTemp =  list.subList(i,i+insertSize);
 					if(listTemp==null||listTemp.isEmpty()){
-						continue;
+						break;
 					}
 					for(JSONObject msg:listTemp){
 						try {

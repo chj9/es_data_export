@@ -59,12 +59,7 @@ public class WriteData2File {
 	public  void toWrite(List<JSONObject> list,String filePath,String fileType) throws IOException{
 		//获取数据字符串集合
 		String str =getJsonStr(list,fileType);
-		if(fileType.equals(Constant.CSV)){
-			//List<String> writearraylist = getJsonList(list,fileType);
-			//CSVUtil.writeCSV(null, filePath, writearraylist);
-		}else{
-			FileUtil.writeFile(filePath,str);
-		}
+		FileUtil.writeFile(filePath,str);
 	} 
 	private  String getJsonStr(List<JSONObject> dataList,String fileType) {
 		StringBuilder sb = new StringBuilder();
@@ -96,31 +91,10 @@ public class WriteData2File {
 		}
 		return sb.toString();
 	}
-//	private  List<String> getJsonList(List<JSONObject> dataList,String fileType) {
-//		needFieldName = true;
-//		List<String> list = new ArrayList<>();
-//		try {
-//			for (JSONObject data : dataList) {
-//				switch (fileType) {
-//					case Constant.CSV:
-//						list.add(csvHandler(data));
-//						break;
-//					default:
-//						break;
-//				}
-//			}
-//		} catch (Exception e) {
-//			throw (e);
-//		}
-//		return list;
-//	}
 	private  String sqlHandler(JSONObject json){
 		String sql = SqlParser.replaceToValue(sql_format, json);
 		return sql;
 	}
-//	private  String  csvHandler(JSONObject json){
-//		return txtHandler(json,Constant.COMMA_SIGN);
-//	}
 	private   String txtHandler(JSONObject json,String split){
 		List<String> list = new ArrayList<>();
 		List<Map<String,Object>> listMap = fieldSort(json);

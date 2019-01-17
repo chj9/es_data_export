@@ -17,7 +17,6 @@ import java.util.Objects;
 
 import javax.net.ssl.SSLContext;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpStatus;
@@ -217,15 +216,5 @@ public enum Rest {
 			flag = false;
 		}
 		return flag;
-	}
-	public static void main(String[] args) throws Exception {
-		RestClient client = Rest.Client.getRestClient();
-		
-		Response  response =client.performRequest(null);
-        InputStream in=response.getEntity().getContent();
-        IOUtils.toString(in,"UTF-8");
-        //释放该连接
-        in.close();
-        
 	}
 }
