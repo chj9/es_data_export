@@ -15,6 +15,7 @@ import com.chenhj.config.EsConfig;
 import com.chenhj.config.FileConfig;
 import com.chenhj.config.JdbcConfig;
 import com.chenhj.config.KafkaConfig;
+import com.chenhj.config.QuartzConfig;
 import com.chenhj.constant.Constant;
 import com.chenhj.util.PropertiesUtil;
 
@@ -47,6 +48,7 @@ public class InitConfig {
 			 JdbcConfig jdbcConfig = new JdbcConfig();
 			 KafkaConfig kafkaConfig = new KafkaConfig();
 			 CommonConfig commonConfig = new CommonConfig();
+			 QuartzConfig quartzConfig = new QuartzConfig();
 			 //加载配置文件的参数
 			 for(Map.Entry<String, String> entry : map.entrySet()){
 		            value  = entry.getValue();
@@ -73,6 +75,9 @@ public class InitConfig {
 						case Constant.KAFKA:
 							setConfig(kafkaConfig,field,value);
 							break;
+						case Constant.QUARTZ:
+							setConfig(quartzConfig,field,value);
+							break;
 						default:
 							break;
 						}
@@ -82,12 +87,14 @@ public class InitConfig {
 			 fileConfig.validation();
 			 jdbcConfig.validation();
 			 kafkaConfig.validation();
+			 quartzConfig.validation();
 			 //赋值全局变量
 			 Config.ES_CONFIG = esConfig;
 			 Config.FILE_CONFIG = fileConfig;
 			 Config.JDBC_CONFIG = jdbcConfig;
 			 Config.COMMON_CONFIG = commonConfig;
 			 Config.Kafka_CONFIG = kafkaConfig;
+			 Config.QUARTZ_CONFIG = quartzConfig;
 		 }
 	 }
 	 private static  void setConfig(Object obj,String key,String value) throws Exception{

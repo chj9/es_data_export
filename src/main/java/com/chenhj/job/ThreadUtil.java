@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.chenhj.config.Config;
+import com.chenhj.config.QuartzConfig;
 import com.chenhj.constant.Constant;
 import com.chenhj.constant.Pool;
 import com.chenhj.task.ExportDataMasterTask;
@@ -35,6 +36,13 @@ public class ThreadUtil {
 				System.exit(-1);
 			}
 			exportDataTask();
+			
+			//下面这里判断是否需要定时
+			if(Config.QUARTZ_CONFIG.isEnabled()){
+				
+			};
+			
+			
 		} catch (Exception e) {
 			throw e;
 		}

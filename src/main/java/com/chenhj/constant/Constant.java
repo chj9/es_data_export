@@ -40,6 +40,7 @@ public enum Constant {
 	public static final String DB ="db";
 	public static final String COMMON ="common";
 	public static final String KAFKA ="kafka";
+	public static final String QUARTZ ="quartz";
 	public static final String DOT="\\.";
 	public static final String COLON=":";
 	

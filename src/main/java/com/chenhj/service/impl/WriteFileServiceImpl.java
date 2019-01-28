@@ -4,8 +4,10 @@
 package com.chenhj.service.impl;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
+import java.util.Map;
+
 import com.alibaba.fastjson.JSONObject;
 import com.chenhj.config.Config;
 import com.chenhj.constant.Constant;
@@ -30,32 +32,46 @@ import com.chenhj.util.FileUtil;
 */
 public class WriteFileServiceImpl implements IWriteFileService{
 	// 分文件导出
-	private  static Integer index=null; // 起始文件下标
-	String  basePath;
-	String  fileName;
-	String  max_filesize;
-	String  flagFileName;
-	String query;
-	String  dataLayout;
+	private volatile static Integer index=null; // 起始文件下标
+	// 分文件导出
+	private static volatile Map<Integer, Integer> jsonIndex = new HashMap<Integer, Integer>();
+	private String  basePath;
+	private String  fileName;
+	private String  max_length_file;
+	private String query;
+	private String  dataLayout;
+	private String split_method;
+	private boolean need_split_file;
 	private WriteData2File writeData2File;
 	public WriteFileServiceImpl() throws Exception{
-		writeData2File = new WriteData2File();
-		basePath = Config.FILE_CONFIG.getFilepath();
-		fileName = Config.FILE_CONFIG.getFilename();
-		max_filesize = Config.FILE_CONFIG.getMax_filesize();
-		flagFileName = ".es_data_export";
-		query = Config.ES_CONFIG.getQuery();
-		dataLayout= Config.FILE_CONFIG.getDatalayout();
-		query = EncryUtil.encry(query, "MD5");
+		this.writeData2File = new WriteData2File();
+		this.basePath = Config.FILE_CONFIG.getFilepath();
+		this.fileName = Config.FILE_CONFIG.getFilename();
+		this.max_length_file = Config.FILE_CONFIG.getMax_length_file();
+		this.query = Config.ES_CONFIG.getQuery();
+		this.dataLayout= Config.FILE_CONFIG.getDatalayout();
+		this.query = EncryUtil.encry(query, "MD5");
+		this.need_split_file = Config.FILE_CONFIG.getNeed_split_file();
+		this.split_method = Config.FILE_CONFIG.getSplit_method();
 	}
 	@Override
-	public  void write2File(List<JSONObject> list) throws Exception {
+	public synchronized void write2File(List<JSONObject> list) throws Exception {
 		try {
 			String filePath = "";
 			/*******************此处选出标记的文件*************************/
 			//判断是否需要分割
-			if(StringUtils.isNoneEmpty(max_filesize)){
-			  fileName = splitFile();
+			if(need_split_file){
+				switch (split_method) {
+				case "disk":
+					fileName = splitFile();
+					break;
+				case "amount":
+					int size = list.size();
+					fileName =fileName+"_"+sedAndGetIndex(size);
+					break;
+				default:
+					break;
+				}
 			}
 			fileName = parserFileName(fileName, dataLayout);
 			filePath = basePath +File.separator+fileName;
@@ -65,15 +81,34 @@ public class WriteFileServiceImpl implements IWriteFileService{
 			throw e;
 		}
 	}
+	//以文件条数分割算法
+	// 获取要写入的文件下标
+	public int sedAndGetIndex(int size) {
+		if (jsonIndex.size() == 0) {
+			jsonIndex.put(0, size);
+			return 0;
+		}
+		if(index==null){
+			index = 0;
+		}
+		int count = jsonIndex.get(index);
+		
+		if (count >= Integer.valueOf(max_length_file)) {
+			jsonIndex.put(++index, size);
+		} else {
+			jsonIndex.put(index, count + size);
+		}
+		return index;
+	}
 	/**
-	 * 文件切割算法
+	 * 以文件大小进行文件切割算法
 	 * @throws Exception 
 	 */
 	public String splitFile() throws Exception{
 		String fileName = "";
 		//String flagStr = "";
 		//KB转B
-		long max_size = Long.valueOf(max_filesize)*1024;
+		long max_size = Long.valueOf(max_length_file)*1024;
 		//String flagFilePath = basePath +File.separator+flagFileName;
 		 long fileSize =  FileUtil.getFileSize("");
 			//3,114,3f5ea8e4e6cfb52f90310413623f25f9

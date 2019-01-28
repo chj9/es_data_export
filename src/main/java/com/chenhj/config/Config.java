@@ -25,5 +25,6 @@ public enum Config {
 	public static FileConfig FILE_CONFIG;
 	public static KafkaConfig Kafka_CONFIG;
 	public static CommonConfig COMMON_CONFIG;
+	public static QuartzConfig QUARTZ_CONFIG;
 	
 }

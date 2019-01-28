@@ -110,7 +110,7 @@ public String getJdbc_template() {
 	public  String toString(){
 		return JSON.toJSONString(this);  
 	}
-	public  void validation() throws IllegalAccessException{
+	public  void validation() throws IllegalArgumentException{
 		if(enabled){
 			InitConfig.requireNonNull(jdbc_driver_library, "jdbc_driver_library 不能为null");
 			InitConfig.requireNonNull(jdbc_driver_class, "jdbc_driver_class不能为空");
@@ -124,7 +124,7 @@ public String getJdbc_template() {
 			jdbc_template=SqlParser.toLegalSql(jdbc_template);
 			//验证sql合法性
 			if(!SqlParser.isInsertSql(jdbc_template)){
-				throw new IllegalAccessException("SQL jdbc_template 只支持insert和update");
+				throw new IllegalArgumentException("SQL jdbc_template 只支持insert和update");
 			};
 			tableName = SqlParser.getTableName();
 			InitConfig.requireNonNull(tableName, "tableName不能为空");

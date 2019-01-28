@@ -1,7 +1,8 @@
-/**
- * 
- */
 package com.chenhj.config;
+
+
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.chenhj.constant.Constant;
@@ -32,17 +33,32 @@ public class FileConfig {
 	//文件路径
 	private  String filepath;
 	private  String filename;
-	private  String max_filesize;
+	private  String max_length_file;
 	private  String custom_field_name;
 	private  String field_split=Constant.COMMA_SIGN;
 	private  String field_sort;
 	private  Boolean need_field_name=false;
+	private  String split_method = "disk";
 	private  String sql_format;
 	
 	private String csv_headers;
 	
+	private Boolean need_split_file= false;
 	
 	
+	
+	public String getSplit_method() {
+		return split_method;
+	}
+	public void setSplit_method(String split_method) {
+		this.split_method = split_method;
+	}
+	public Boolean getNeed_split_file() {
+		return need_split_file;
+	}
+	public void setNeed_split_file(Boolean need_split_file) {
+		this.need_split_file = need_split_file;
+	}
 	public String getCsv_headers() {
 		return csv_headers;
 	}
@@ -80,11 +96,13 @@ public class FileConfig {
 		this.filename = filename;
 	}
 	
-	public String getMax_filesize() {
-		return max_filesize;
+	
+	
+	public String getMax_length_file() {
+		return max_length_file;
 	}
-	public void setMax_filesize(String max_filesize) {
-		this.max_filesize = max_filesize;
+	public void setMax_length_file(String max_length_file) {
+		this.max_length_file = max_length_file;
 	}
 	public String getCustom_field_name() {
 		return custom_field_name;
@@ -125,6 +143,20 @@ public class FileConfig {
 			InitConfig.requireNonNull(datalayout, "datalayout不能为空");
 			InitConfig.requireNonNull(filepath, "filepath数据存储文件路径不能为空");
 			InitConfig.requireNonNull(filename, "filename数据存储文件名不能为空");
+			if(need_split_file){
+				if(StringUtils.isBlank(max_length_file)){
+					switch (split_method) {
+					case "disk":
+						max_length_file = "10240";
+						break;
+					case "amount":
+						max_length_file = "1000000";
+						break;
+					default:
+						break;
+					}
+				}
+			}
 		}
 	}
 }
