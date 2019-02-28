@@ -8,6 +8,8 @@ import com.chenhj.init.InitConnection;
 import com.chenhj.init.InitLogBack;
 import com.chenhj.init.InitThreadPool;
 import com.chenhj.job.ThreadUtil;
+import com.chenhj.util.impl.ResourceBannerImpl;
+
 /**
  *ES数据导出入口类
  */
@@ -31,8 +33,12 @@ public class App
     		//线程池初始化
     		InitThreadPool.init();
     		logger.info("ThreadPool Load the success...");
-        	new ThreadUtil().startConsume();
-        	logger.info("Running Success,Version:"+Constant.VERSION);                                                          
+
+        	logger.info("Running Success,Version:"+Constant.VERSION);
+        	// 打印logo
+        	new ResourceBannerImpl().printBanner(System.out);
+
+			new ThreadUtil().startConsume();
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -116,6 +116,7 @@ public class FileConfig {
 	public void setSql_format(String sql_format) {
 		this.sql_format = sql_format;
 	}
+	@Override
 	public  String toString(){
 		return JSON.toJSONString(this);  
 	}

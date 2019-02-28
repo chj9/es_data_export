@@ -75,7 +75,7 @@
   	<build>
 		<resources>
 			<resource>
-				<directory>src/main/resource/mapper</directory>
+				<directory>src/main/resources/mapper</directory>
 				<includes>
 					<include>*.xml</include>
 				</includes>
@@ -83,11 +83,12 @@
 				<filtering>false</filtering>
 			</resource>
 			<resource>
-				<directory>src/main/resource</directory>
+				<directory>src/main/resources</directory>
 				<includes>
 					<include>*.properties</include>
 					<include>*.xml</include>
 					<include>*.tld</include>
+					<include>*.txt</include>
 				</includes>
 				<filtering>false</filtering>
 			</resource>
@@ -95,8 +96,8 @@
 		<defaultGoal>compile</defaultGoal>
 		<sourceDirectory>src/main</sourceDirectory>
 		<finalName>es_data_export</finalName>
-    <plugins>  
-        <plugin>  
+    <plugins>
+        <plugin>
                 <groupId>org.apache.maven.plugins</groupId>  
                 <artifactId>maven-assembly-plugin</artifactId>  
                 <version>2.5.5</version>  

@@ -35,7 +35,7 @@ public class DriverLoader {
 	 /**
 	  * 加载对应路径jar包里的对应驱动
 	  * @param fname  对应路径  如: lib4/ojdbc14.jar
-	  * @param dname  驱动名  如: oracle.jdbc.driver.OracleDriver
+	  * @param driver  驱动名  如: oracle.jdbc.driver.OracleDriver
 	  * @return 加载到的驱动    java.sql.Driver
 	  * @throws Exception
 	  * @author tangxr

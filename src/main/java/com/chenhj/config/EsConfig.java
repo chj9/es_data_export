@@ -97,6 +97,7 @@ public class EsConfig {
 	public void setSsl_keystorepass(String ssl_keystorepass) {
 		this.ssl_keystorepass = ssl_keystorepass;
 	}
+	@Override
 	public  String toString(){
 		return JSON.toJSONString(this);  
 	}
