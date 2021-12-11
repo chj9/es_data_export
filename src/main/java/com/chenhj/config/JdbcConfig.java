@@ -107,6 +107,7 @@ public String getJdbc_template() {
 	public void setJdbc_size(Integer jdbc_size) {
 		this.jdbc_size = jdbc_size;
 	}
+	@Override
 	public  String toString(){
 		return JSON.toJSONString(this);  
 	}

@@ -4,6 +4,7 @@
 package com.chenhj.init;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,7 @@ public class InitLogBack {
  		//String configFilepathName = FilePathHelper.getFilePathWithJar("logback.xml");
         File file = new File(Constant.LOGBACK_CONFIG_NAME);
         if(!file.exists()){
-        	throw new NullPointerException("logback.xml为空");
+        	throw new FileNotFoundException("logback.xml 不存在");
         }
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         //注意包不要引错

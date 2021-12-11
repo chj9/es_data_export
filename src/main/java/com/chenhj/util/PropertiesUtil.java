@@ -79,7 +79,6 @@ public class PropertiesUtil {
 	
 	/**
 	 * 获取配置文件
-	 * @param name 配置文件名称
 	 * @return
 	 */
 	public synchronized  Map<String, String> loadProperties() {

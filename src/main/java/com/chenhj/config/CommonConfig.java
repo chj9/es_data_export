@@ -39,7 +39,8 @@ public class CommonConfig {
 	public void setThread_size(int thread_size) {
 		this.thread_size = thread_size;
 	}
-	
+
+	@Override
 	public  String toString(){
 		return JSON.toJSONString(this);  
 	}
