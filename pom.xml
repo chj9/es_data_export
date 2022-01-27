@@ -13,15 +13,15 @@
   <properties>
   		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-  		<fastjson>1.2.54</fastjson>
-  		<logback>1.2.3</logback>
-		<slf4j>1.7.25</slf4j>
-		<commons-lang>3.8.1</commons-lang>
-		<commons-io>2.7</commons-io>
+  		<fastjson>1.2.79</fastjson>
+  		<logback>1.2.10</logback>
+		<slf4j>1.7.35</slf4j>
+		<commons-lang>3.12.0</commons-lang>
+		<commons-io>2.11.0</commons-io>
 		<!-- 数据库连接池-->
-		<druid>1.1.12</druid>
+		<druid>1.2.8</druid>
 		<!-- -->
-		<elasticsearch>6.5.4</elasticsearch>
+		<elasticsearch>7.16.3</elasticsearch>
     	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     	<maven.compiler.source>1.8</maven.compiler.source>
 	  	<maven.compiler.target>1.8</maven.compiler.target>
