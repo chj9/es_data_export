@@ -14,7 +14,7 @@
   		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   		<fastjson>1.2.79</fastjson>
-  		<logback>1.2.10</logback>
+  		<logback>1.3.12</logback>
 		<slf4j>1.7.35</slf4j>
 		<commons-lang>3.12.0</commons-lang>
 		<commons-io>2.11.0</commons-io>
